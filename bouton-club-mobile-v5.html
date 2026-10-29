@@ -2013,6 +2013,56 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.0/dist/umd/supabase.js"></script>
 <script src="club-api.js"></script>
 <script src="club-reel.js"></script>
+
+<style id="fiche-plein-ecran">
+  /* ===== Fiche du club en plein écran (29/10/2026, choix de Marie) ===== */
+  .sheet { height: 100% !important; border-radius: 0 !important; }
+  .sheet .grip, .sheet .sheet-top .eyebrow { display: none !important; }
+  /* la barre du haut, posée sur la liste ; elle s'efface quand on descend (la croix reste) */
+  .sheet .sheet-top { position: absolute; left: 0; right: 0; top: 0; z-index: 4; height: 62px; padding: 0 !important;
+    background: var(--sheet); border-bottom: 1px solid var(--line); transition: background-color .3s, border-color .3s; }
+  .sheet .sheet-top .close { top: 12px !important; z-index: 6; transition: box-shadow .3s; }
+  .fp-name { position: absolute; left: 0; right: 0; top: 23px; margin: 0; text-align: center; font: 600 16px/1 var(--serif); color: var(--ink); pointer-events: none; transition: opacity .3s, transform .35s; }
+  .sheet .sheet-top .deja { position: absolute; left: 12px; top: 11px; margin: 0 !important; padding: 5px 10px !important; display: grid; justify-items: start; gap: 1px;
+    border-radius: 14px; background: #FFFDF8; box-shadow: inset 0 0 0 1.5px #D5C6AF; font-size: 10px !important; line-height: 1.2; color: var(--muted) !important;
+    text-align: left; transition: opacity .3s, transform .35s; }
+  .sheet .sheet-top .deja a { font-size: 12px; font-weight: 800; color: var(--ink) !important; text-decoration: none; }
+  .sheet.fp-bas .sheet-top { background: transparent; border-color: transparent; pointer-events: none; }
+  .sheet.fp-bas .sheet-top .close { pointer-events: auto; box-shadow: 0 6px 14px -6px rgba(42,26,16,.45); }
+  .sheet.fp-bas .fp-name, .sheet.fp-bas .sheet-top .deja { opacity: 0; transform: translateY(-14px); pointer-events: none; }
+  .sheet .body { padding-top: 78px !important; padding-bottom: 24px !important; }
+
+  /* en bas : seulement le bouton pour rejoindre, qui grossit quand on descend */
+  .sheet .sheet-foot { border-top: 0 !important; padding: 12px 16px 14px !important; box-shadow: 0 -12px 18px -14px rgba(42,26,16,.35); }
+  .sheet .sheet-foot .cta { transition: padding .35s cubic-bezier(.2,.8,.2,1), font-size .35s cubic-bezier(.2,.8,.2,1), border-radius .35s, box-shadow .35s; box-shadow: 0 14px 24px -14px rgba(33,2,2,.8); }
+  .sheet.fp-bas .sheet-foot .cta { padding: 23px 10px; font-size: 17px; border-radius: 24px; box-shadow: 0 18px 30px -14px rgba(33,2,2,.9); }
+  .sheet .sheet-foot { transition: padding .35s; }
+  .sheet.fp-bas .sheet-foot { padding-left: 12px !important; padding-right: 12px !important; }
+
+  /* la carte n°5 : haut chocolat, bas crème */
+  .h2v.mix-band { background: linear-gradient(180deg, #4E2E22 0 78px, #FFFDF8 78px) !important; box-shadow: 0 0 0 1px #EADFD2, 0 18px 30px -22px rgba(78,46,34,.7) !important; }
+  .h2v.mix-band::before { display: none !important; }
+  .h2v .h2-kicker { color: #E8C9A0 !important; }
+  .h2v .h2-name { color: #F8F4EC !important; }
+  .h2v .h2-price { margin-top: 22px !important; }
+  .h2v .h2-price b { color: #210202 !important; }
+  .h2v .h2-price span, .h2v .h2-sub { color: #6E4A32 !important; }
+  .h2v .h2-places { background: #F2E8E1 !important; color: #4E2E22 !important; box-shadow: inset 0 0 0 1.5px #D5C6AF; }
+  .fp-terms { margin: 12px 4px 0; text-align: center; font-size: 12px; line-height: 1.4; color: var(--muted); text-wrap: balance; }
+
+  /* les avantages : une liste claire, un trait entre chaque */
+  .fp-h { display: flex; align-items: baseline; justify-content: space-between; margin: 26px 2px 0; }
+  .fp-h b { font: 800 23px/1 var(--serif); color: var(--ink); }
+  .fp-h span { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .sheet ul.perks { gap: 0 !important; margin-top: 10px !important; padding: 2px 14px; border-radius: 22px; background: #FFFDF8; box-shadow: 0 0 0 1px #EADFD2; }
+  .sheet ul.perks li { background: none !important; border-radius: 0 !important; padding: 13px 0 !important; }
+  .sheet ul.perks li + li { border-top: 1px solid #EADFD2; }
+
+  /* à la fin de la liste : offrir le club, les petites lignes et les liens */
+  .fp-fin { display: grid; gap: 12px; margin-top: 18px; }
+  .fp-fin .offrir, .fp-fin .legal, .fp-fin .foot-note, .fp-fin .proof { margin: 0 !important; }
+  @media (prefers-reduced-motion: reduce) { .sheet .sheet-top, .fp-name, .sheet .sheet-top .deja, .sheet .sheet-foot, .sheet .sheet-foot .cta { transition: none !important; } }
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -4947,5 +4997,49 @@
   })();
 </script>
 
+
+<script>
+/* Fiche du club en plein écran (29/10/2026) : on range les éléments, et la barre du haut s'efface quand on descend */
+(function () {
+  var sheet = document.querySelector('.sheet'); if (!sheet) return;
+  var top = sheet.querySelector('.sheet-top'), body = sheet.querySelector('.body'), foot = sheet.querySelector('.sheet-foot');
+  if (!top || !body || !foot) return;
+  var name = document.createElement('p'); name.className = 'fp-name'; name.textContent = 'Club Dilerna'; top.appendChild(name);
+  var deja = foot.querySelector('.deja');
+  if (deja) {
+    // « Déjà membre ? » sur une ligne, « Je me connecte » dessous (on garde le vrai lien, avec son action)
+    var tn = deja.firstChild;
+    if (tn && tn.nodeType === 3) { var sp = document.createElement('span'); sp.textContent = tn.textContent.trim(); deja.replaceChild(sp, tn); }
+    top.appendChild(deja);
+  }
+  var fin = document.createElement('div'); fin.className = 'fp-fin';
+  ['.offrir', '.foot-note', '.legal'].forEach(function (q) { var el = foot.querySelector(q); if (el) fin.appendChild(el); });
+  function range() {
+    // après chaque affichage de la fiche : le titre des avantages, la petite ligne sous la carte, et la fin de liste
+    var card = body.querySelector('.h2v'), note = fin.querySelector('.foot-note');
+    if (card && note && note.textContent.trim() && !body.querySelector('.fp-terms')) {
+      var t = document.createElement('p'); t.className = 'fp-terms'; t.textContent = note.textContent; card.insertAdjacentElement('afterend', t);
+    }
+    if (note) note.hidden = true;
+    var ul = body.querySelector('ul.perks');
+    if (ul && !body.querySelector('.fp-h')) {
+      var h = document.createElement('p'); h.className = 'fp-h';
+      h.innerHTML = '<b>Tes avantages</b><span>' + ul.children.length + ' avantages</span>';
+      ul.parentNode.insertBefore(h, ul);
+    }
+    var gift = foot.querySelector('.gift-recu');
+    if (gift && card) card.insertAdjacentElement('afterend', gift);
+    if (fin.parentNode !== body || body.lastElementChild !== fin) body.appendChild(fin);
+  }
+  var obs = new MutationObserver(function () { obs.disconnect(); range(); obs.observe(body, { childList: true }); });
+  range(); obs.observe(body, { childList: true });
+  body.addEventListener('scroll', function () {
+    if (body.scrollTop > 60) sheet.classList.add('fp-bas'); else if (body.scrollTop < 30) sheet.classList.remove('fp-bas');
+  }, { passive: true });
+  // quand la fiche se rouvre, elle repart du haut
+  new MutationObserver(function () { if (!document.querySelector('.phone.open')) { body.scrollTop = 0; sheet.classList.remove('fp-bas'); } })
+    .observe(sheet.closest('.phone') || document.body, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
 </body>
 </html>
