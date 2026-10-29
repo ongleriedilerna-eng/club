@@ -2047,15 +2047,17 @@
   .sheet.fp-bas .sheet-foot { padding-left: 12px !important; padding-right: 12px !important; }
 
   /* la carte n°5 : haut chocolat, bas crème */
-  .h2v.mix-band { background: linear-gradient(180deg, #4E2E22 0 78px, #FFFDF8 78px) !important; box-shadow: 0 0 0 1px #EADFD2, 0 18px 30px -22px rgba(78,46,34,.7) !important; }
+  .h2v.mix-band { padding: 11px 12px 13px !important; background: linear-gradient(180deg, #4E2E22 0 64px, #FFFDF8 64px) !important; box-shadow: 0 0 0 1px #EADFD2, 0 18px 30px -22px rgba(78,46,34,.7) !important; }
   .h2v.mix-band::before { display: none !important; }
-  .h2v .h2-kicker { color: #E8C9A0 !important; }
-  .h2v .h2-name { color: #F8F4EC !important; }
-  .h2v .h2-price { margin-top: 22px !important; }
+  .h2v .h2-kicker { color: #E8C9A0 !important; font-size: 11px !important; }
+  .h2v .h2-name { color: #F8F4EC !important; font-size: 19px !important; margin: 2px 0 4px !important; }
+  .h2v .h2-price { margin-top: 18px !important; }
+  .h2v .h2-price b { font-size: 42px !important; }
+  .h2v .h2-sub { margin-top: 6px !important; font-size: 13.5px !important; }
   .h2v .h2-price b { color: #210202 !important; }
   .h2v .h2-price span, .h2v .h2-sub { color: #6E4A32 !important; }
   .h2v .h2-places { background: #F2E8E1 !important; color: #4E2E22 !important; box-shadow: inset 0 0 0 1.5px #D5C6AF; }
-  .fp-terms { margin: 12px 4px 0; text-align: center; font-size: 12px; line-height: 1.4; color: var(--muted); text-wrap: balance; }
+  .fp-terms { margin: 10px 0 0; text-align: center; font-size: 12px; line-height: 1.4; color: var(--muted); white-space: nowrap; overflow: hidden; }
 
   /* les avantages : une liste claire, un trait entre chaque */
   .fp-h { display: flex; align-items: baseline; justify-content: space-between; margin: 26px 2px 0; }
@@ -2067,6 +2069,17 @@
 
   /* à la fin de la liste : offrir le club, les petites lignes et les liens */
   .fp-fin { display: grid; gap: 12px; margin-top: 18px; }
+  /* le cadeau 🎁 teinté comme les autres emojis (beige/marron) */
+  .emo-t, .gift-ico { filter: grayscale(1) sepia(.75) saturate(1.15) brightness(.8); }
+  /* écrans pour payer (s'abonner, offrir) : plus compacts, tout tient sur l'écran d'un iPhone */
+  .onb-step { gap: 7px !important; padding: 20px 20px calc(18px + env(safe-area-inset-bottom, 0px)) !important; }
+  .onb-crown { width: 22px !important; height: 22px !important; }
+  .onb-t { font-size: 23px !important; }
+  .onb-prix { padding: 9px 12px !important; margin-bottom: 2px !important; } .onb-prix b { font-size: 25px !important; }
+  .onb-f { gap: 3px !important; } .onb-f input { height: 42px !important; }
+  .onb-err { min-height: 0 !important; }
+  .onb-pay { height: 46px !important; }
+  .gift-ico { margin: 0 !important; font-size: 26px !important; line-height: 1 !important; }
   /* plus de page entre deux derrière la fiche : ni « Ouvrir le club », ni fausse barre du bas (on revient directement sur dilerna.fr) */
   html.reel .phone .site, html.reel .phone .tabbar, html.reel .phone .scrim { visibility: hidden !important; } /* fp-sans-fond */
   .fp-fin .offrir, .fp-fin .legal, .fp-fin .foot-note, .fp-fin .proof { margin: 0 !important; }
@@ -5032,6 +5045,22 @@
     });
   }
   sacs(document);
+  function cadeaux(root) {
+    // chaque 🎁 du club dans un petit span teinté
+    var w = document.createTreeWalker(root || document.body, NodeFilter.SHOW_TEXT), n, todo = [];
+    while ((n = w.nextNode())) if (n.nodeValue.indexOf('\uD83C\uDF81') >= 0 && !(n.parentNode.closest && n.parentNode.closest('.emo-t, .gift-ico, script, style'))) todo.push(n);
+    todo.forEach(function (t) {
+      var parts = t.nodeValue.split('\uD83C\uDF81'), frag = document.createDocumentFragment();
+      parts.forEach(function (p, k) { if (k) { var sp = document.createElement('span'); sp.className = 'emo-t'; sp.textContent = '\uD83C\uDF81'; frag.appendChild(sp); } if (p) frag.appendChild(document.createTextNode(p)); });
+      t.parentNode.replaceChild(frag, t);
+    });
+  }
+  function uneLigne() {
+    var t = body.querySelector('.fp-terms'); if (!t) return;
+    var fs = 12; t.style.fontSize = fs + 'px';
+    while (t.scrollWidth > t.clientWidth + 1 && fs > 9.5) { fs -= .25; t.style.fontSize = fs + 'px'; }
+  }
+  cadeaux(document.body); addEventListener('resize', uneLigne);
   function range() {
     sacs(body);
     // après chaque affichage de la fiche : le titre des avantages, la petite ligne sous la carte, et la fin de liste
@@ -5049,6 +5078,7 @@
     var gift = foot.querySelector('.gift-recu');
     if (gift && card) card.insertAdjacentElement('afterend', gift);
     if (fin.parentNode !== body || body.lastElementChild !== fin) body.appendChild(fin);
+    cadeaux(body); uneLigne();
   }
   var obs = new MutationObserver(function () { obs.disconnect(); range(); obs.observe(body, { childList: true }); });
   range(); obs.observe(body, { childList: true });
