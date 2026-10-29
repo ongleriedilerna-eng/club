@@ -2039,6 +2039,10 @@
   /* le mot « Dilerna » sur le sac de Louise : un texte à l'endroit, un texte déjà retourné, jamais de retournement en direct */
   .lw .lw-txt { transform: none !important; } .lw .lw-txt2 { display: none; }
   .lw.dos .lw-txt { display: none; } .lw.dos .lw-txt2 { display: inline; }
+  /* Louise plus petite sur la carte du club (29/10/2026, demande de Marie) */
+  .fi-lou { height: 41px !important; margin: 0 0 -8px !important; }
+  .fi-lou .lw { width: 72px !important; height: 48px !important; }
+  .fi-lou .fi-fl { top: 25px !important; width: 10px !important; height: 16px !important; }
   .sheet .sheet-foot { transition: padding .35s; }
   .sheet.fp-bas .sheet-foot { padding-left: 12px !important; padding-right: 12px !important; }
 
@@ -2868,7 +2872,7 @@
       if (!st.isConnected) return;
       var W = st.clientWidth || 320, A = Math.round(W * .46), B = Math.min(W - 40, A + 70);
       if (flX === null) { flX = A; fl.style.left = A + 'px'; }
-      var d = sens, depart = d > 0 ? -110 : W + 10, stop = d > 0 ? flX - 88 : flX + 8, cible = d > 0 ? B : A;
+      var d = sens, depart = d > 0 ? -110 : W + 10, stop = d > 0 ? flX - 63 : flX + 8, cible = d > 0 ? B : A;
       x = depart;
       return attends(900)
         .then(function () { return marche(stop, d, 2600); })
