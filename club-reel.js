@@ -113,6 +113,8 @@
       return null;
     }
     var moi = await Club.moi(), ab = moi && moi.abonnement, pr = moi && moi.profil;
+    /* Marie (compte admin) a accès à tout le club gratuitement, sans abonnement (30/10/2026) */
+    if (pr && pr.est_admin && (!ab || ab.statut === 'en_attente' || ab.statut === 'termine')) ab = { statut: 'actif', debut: pr.cree_le, fin_periode: null };
     if (!ab || ab.statut === 'en_attente') { ls('dilerna-membre', null); ls('dilerna-acces', null); return moi; }
 
     var fin = (ab.arret_demande || ab.statut === 'termine' || ab.statut === 'cadeau') ? ab.fin_periode : null;
