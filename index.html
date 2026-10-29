@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <title>Club Dilerna</title>
 <!-- Pour les essais sur l'ordi : les retours de Stripe et des e-mails arrivent ici et repartent vers le vrai club (?reel=1) -->
-<script>location.replace('bouton-club-mobile-v5.html' + (location.search ? location.search + '&reel=1' : '?reel=1') + location.hash);</script>
+<!-- v=… : à changer à chaque mise à jour de la fiche, pour que les téléphones prennent la nouvelle version (et pas une ancienne gardée en mémoire) -->
+<script>location.replace('bouton-club-mobile-v5.html' + (location.search ? location.search + '&reel=1' : '?reel=1') + '&v=20261029c' + location.hash);</script>
 </head>
 <body></body>
 </html>
