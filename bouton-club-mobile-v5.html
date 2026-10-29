@@ -4552,7 +4552,7 @@
     function jeuClassementHtml(l, unite) {
       l.sort(function (a, b) { return b.s - a.s || (a.moi ? -1 : b.moi ? 1 : 0); });
       var k = l.findIndex(function (x) { return x.moi; });
-      function ligne(x, i) { return '<li' + (x.moi ? ' class="moi"' : '') + '><i style="background:' + NU_TEINTES[Math.min(i, NU_TEINTES.length - 1)] + '"></i><span>' + (i === 0 ? COURONNE + ' ' : (i + 1) + '. ') + x.p + (x.moi ? ' (toi)' : '') + '</span><small>' + x.s + ' ' + unite + '</small></li>'; }
+      function ligne(x, i) { return '<li' + (x.moi ? ' class="moi"' : '') + '><i style="background:' + NU_TEINTES[Math.min(i, NU_TEINTES.length - 1)] + '"></i><span>' + (i === 0 ? COURONNE + ' ' : (i + 1) + '. ') + String(x.p).replace(/[&<>"']/g, function (ch) { return '&#' + ch.charCodeAt(0) + ';'; }) + (x.moi ? ' (toi)' : '') + '</span><small>' + x.s + ' ' + unite + '</small></li>'; }
       var html = l.slice(0, 3).map(ligne).join('');
       if (k >= 3) html += (k > 3 ? '<li class="clt-sep">···</li>' : '') + ligne(l[k], k);
       return '<p class="jx-clt-t">Le classement du mois' + (k >= 0 ? ' · tu es <b>' + (k + 1) + (k === 0 ? 're' : 'e') + '</b> sur ' + l.length : '') + '</p><ol class="clt-nu">' + html + '</ol>';
@@ -4608,7 +4608,7 @@
     }
     function classementListe(l) {
       var rangs = l.map(function (x, i) {
-        return '<li' + (x.moi ? ' class="moi"' : '') + '><i style="background:' + NU_TEINTES[Math.min(i, NU_TEINTES.length - 1)] + '"></i><span>' + (i === 0 ? COURONNE + ' ' : (i + 1) + '. ') + x.p + (x.moi ? ' (toi)' : '') + '</span><small>' + x.s + '/8 · ' + x.t + ' s</small></li>';
+        return '<li' + (x.moi ? ' class="moi"' : '') + '><i style="background:' + NU_TEINTES[Math.min(i, NU_TEINTES.length - 1)] + '"></i><span>' + (i === 0 ? COURONNE + ' ' : (i + 1) + '. ') + String(x.p).replace(/[&<>"']/g, function (ch) { return '&#' + ch.charCodeAt(0) + ';'; }) + (x.moi ? ' (toi)' : '') + '</span><small>' + x.s + '/8 · ' + x.t + ' s</small></li>';
       }).join('');
       return '<div class="clt"><p class="clt-t">Le nuancier des baddies</p><p class="clt-sub">La n°1 devient <b>la baddie du mois</b> ' + COURONNE + '</p><ol class="clt-nu">' + rangs + '</ol><p class="clt-sub">Classé au score, puis au temps de réponse. Seule ta 1re partie du mois compte.</p></div>';
     }

@@ -116,6 +116,9 @@
     if (!ab || ab.statut === 'en_attente') { ls('dilerna-membre', null); ls('dilerna-acces', null); return moi; }
 
     var fin = (ab.arret_demande || ab.statut === 'termine' || ab.statut === 'cadeau') ? ab.fin_periode : null;
+    /* le serveur a le dernier mot (impayé depuis plus de 7 jours, abonnement arrêté tout de suite par Marie…) : l'espace se ferme */
+    var ok = await Club.sb.rpc('est_membre', { uid: s.user.id });
+    if (!ok.error && ok.data === false) fin = new Date(Date.now() - 60e3).toISOString();
     var mb = { prenom: pr.prenom, nom: pr.nom, mail: pr.email, debut: ab.debut, reel: true };
     if (fin) mb.fin = fin;
     ls('dilerna-membre', mb);

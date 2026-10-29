@@ -69,7 +69,7 @@
     },
     /* au retour de Stripe (?bienvenue=cs_...) : elle choisit son mot de passe, puis elle est connectée */
     finirInscription: async function (sessionId, motDePasse) {
-      var d = await serveur('inscription', { action: 'finir', session_id: sessionId, mot_de_passe: motDePasse }, 10);
+      var d = await serveur('inscription', { action: 'finir', session_id: sessionId, mot_de_passe: motDePasse }, 20);   /* jusqu'à 30 s : le temps que Stripe prévienne le serveur */
       await window.Club.connexion(d.email, motDePasse);
       return d;                                    // { email, prenom }
     },
