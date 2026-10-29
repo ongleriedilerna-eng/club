@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Espace Marie</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&display=swap">
+<style>
+  :root { --ink: #2B1A10; --soft: #8A7A70; --line: rgba(43,26,16,.1); --car: #8E5E45; --bg: #FAF7F3; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EFE9E3; color: var(--ink); font-family: system-ui, -apple-system, sans-serif; overflow-x: hidden; }
+  .app { max-width: 420px; margin: 0 auto; min-height: 100vh; background: var(--bg); position: relative; }
+  .ecran { display: none; padding-bottom: 30px; animation: entre .22s ease-out; }
+  .ecran.on { display: block; }
+  @keyframes entre { from { opacity: 0; transform: translateY(6px); } }
+  button { font-family: inherit; color: var(--ink); cursor: pointer; }
+  /* accueil */
+  .top { background: linear-gradient(150deg, #3B2417, #1E120B); color: #F3E3CF; padding: 20px 16px 26px; }
+  .top small { font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: #D9B89A; }
+  .top > b { display: block; font: 500 25px Georgia, serif; margin: 2px 0 14px; }
+  .big { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .big div { background: rgba(243,227,207,.08); border: 1px solid rgba(243,227,207,.15); border-radius: 14px; padding: 10px 4px; text-align: center; font-size: 11px; color: #D9B89A; line-height: 1.3; }
+  .big strong { display: block; font: 600 20px Georgia, serif; color: #F3E3CF; }
+  .corps { padding: 14px 14px 0; margin-top: -12px; background: var(--bg); border-radius: 18px 18px 0 0; position: relative; display: grid; gap: 10px; }
+  .tt { margin: 6px 2px 0; font: 600 16px Georgia, serif; display: flex; justify-content: space-between; align-items: baseline; }
+  .tt small { font: 600 11.5px system-ui; color: var(--soft); }
+  .cases { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .c { text-align: left; border: 0; background: #fff; border-radius: 18px; padding: 12px; box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 1px; position: relative; }
+  .c:active { transform: scale(.98); }
+  .c i { width: 34px; height: 34px; border-radius: 11px; background: #F3E9DE; display: grid; place-items: center; font-style: normal; font-size: 16px; margin-bottom: 6px; }
+  .c b { font-size: 13.5px; } .c small { font-size: 11.5px; color: var(--soft); }
+  .c .pt { position: absolute; top: 10px; right: 10px; min-width: 20px; height: 20px; border-radius: 99px; background: #9A3A2C; color: #fff; font: 700 11px system-ui; display: grid; place-items: center; padding: 0 5px; }
+  .c.large { grid-column: 1 / -1; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; }
+  .c.large i { margin: 0; grid-row: span 2; }
+  .histo { background: #fff; border-radius: 18px; box-shadow: inset 0 0 0 1px var(--line); padding: 4px 12px; }
+  .h { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.4; }
+  .h:last-child { border-bottom: 0; }
+  .h i { font-style: normal; font-size: 15px; text-align: center; }
+  .h time { font-size: 11px; color: var(--soft); white-space: nowrap; padding-top: 2px; }
+  .lien { border: 0; background: none; font-size: 13px; font-weight: 700; color: var(--car); padding: 4px; justify-self: center; }
+  /* écrans */
+  .bar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 14px 14px 10px; background: var(--bg); }
+  .back { width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(43,26,16,.07); font-size: 20px; line-height: 1; }
+  .bar b { font: 500 20px Georgia, serif; }
+  .in { padding: 0 14px; display: grid; gap: 8px; }
+  .search { width: 100%; font-size: 16px; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(43,26,16,.18); background: #fff; font-family: inherit; color: var(--ink); }
+  .row { width: 100%; border: 0; text-align: left; background: #fff; border-radius: 16px; padding: 10px 12px; box-shadow: inset 0 0 0 1px var(--line); display: grid; grid-template-columns: 38px 1fr auto; gap: 10px; align-items: center; font-size: 13px; }
+  .av { width: 38px; height: 38px; border-radius: 50%; background: #F3E9DE; display: grid; place-items: center; font: 600 15px Georgia, serif; color: var(--car); }
+  .row b { display: block; font-size: 14px; } .row small { font-size: 11.5px; color: var(--soft); }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; max-width: 130px; }
+  .t { font-size: 10.5px; font-weight: 700; border-radius: 999px; padding: 3px 8px; white-space: nowrap; }
+  .ok { background: #E6EFE3; color: #3F6B3A; } .ko { background: #F6DEDA; color: #9A3A2C; } .be { background: #F3E9DE; color: var(--car); }
+  .chiffres { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .chiffres div { background: #fff; border-radius: 14px; padding: 12px; text-align: center; box-shadow: inset 0 0 0 1px var(--line); font-size: 11.5px; color: var(--soft); }
+  .chiffres b { display: block; font: 600 22px Georgia, serif; color: var(--ink); }
+  .sous { margin: 10px 2px 0; font: 600 14px Georgia, serif; }
+  .essais { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .essais button { border: 0; padding: 0; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); text-align: left; }
+  .essais i { display: block; aspect-ratio: 3 / 4; background: center / cover; }
+  .essais span { display: block; padding: 7px 9px; font-size: 11.5px; color: var(--soft); } .essais span b { display: block; font-size: 13px; color: var(--ink); }
+  .grand { border-radius: 20px; overflow: hidden; aspect-ratio: 3 / 4; background: center / cover; }
+  .carte-info { background: #fff; border-radius: 16px; padding: 12px 14px; box-shadow: inset 0 0 0 1px var(--line); font-size: 13.5px; line-height: 1.5; }
+  .fiche-h { display: flex; gap: 12px; align-items: center; padding: 2px 2px 6px; }
+  .fiche-h .av { width: 52px; height: 52px; font-size: 20px; }
+  .fiche-h b { display: block; font: 500 22px Georgia, serif; } .fiche-h small { color: var(--soft); font-size: 12.5px; }
+  .d { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; background: #fff; border-radius: 14px; padding: 11px 12px; box-shadow: inset 0 0 0 1px var(--line); font-size: 13.5px; }
+  .d small { display: block; color: var(--soft); font-size: 11.5px; }
+  .d button { border: 0; border-radius: 999px; background: #F3E9DE; font: 700 12px system-ui; padding: 8px 11px; white-space: nowrap; }
+  .d button.fait { background: #E6EFE3; color: #3F6B3A; cursor: default; }
+  .wa { width: 100%; border: 0; border-radius: 999px; background: var(--ink); color: #FBF7F2; font: 700 14px system-ui; padding: 13px; margin-top: 4px; }
+  .note { margin: 14px 16px 0; font-size: 11.5px; color: var(--soft); text-align: center; }
+  .emo-m { filter: grayscale(1) sepia(.75) saturate(1.15) brightness(.8); }
+
+  /* le haut : la jauge des places */
+  .haut { padding: 22px 18px 6px; }
+  .haut small { font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--car); font-weight: 700; }
+  .haut > b { display: block; font: 500 25px Georgia, serif; margin: 2px 0 14px; }
+  .jauge { display: grid; grid-template-columns: 110px 1fr; gap: 18px; align-items: center; }
+  .rond { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; }
+  .rond > div { width: 84px; height: 84px; border-radius: 50%; background: var(--bg); display: grid; place-items: center; text-align: center; font-size: 11px; color: var(--soft); line-height: 1.2; }
+  .rond b { display: block; font: 600 22px Georgia, serif; color: var(--ink); }
+  .jauge .l { display: grid; gap: 10px; }
+  .jauge .l div { font-size: 12.5px; color: var(--soft); } .jauge .l b { display: block; font: 600 21px Georgia, serif; color: var(--ink); }
+  .haut + .corps { margin-top: 0; }
+
+  /* l'historique : un petit bouton en haut à droite */
+  .haut { position: relative; }
+  .histo-btn { position: absolute; top: 16px; right: 14px; border: 0; background: #fff; border-radius: 999px; padding: 7px 12px; font: 700 12px system-ui; box-shadow: inset 0 0 0 1px var(--line), 0 6px 14px -10px rgba(43,26,16,.5); display: inline-flex; align-items: center; gap: 6px; }
+  .histo-btn i { font-style: normal; min-width: 18px; height: 18px; border-radius: 99px; background: #9A3A2C; color: #fff; font-size: 10.5px; display: grid; place-items: center; padding: 0 5px; }
+  .histo-btn i:empty { display: none; }
+
+  /* l'historique dans un carré arrondi, en face de la jauge, qui défile */
+  .jauge { grid-template-columns: 110px 1fr !important; gap: 12px !important; }
+  .mini-histo { height: 116px; background: #fff; border-radius: 18px; box-shadow: inset 0 0 0 1px var(--line); padding: 8px 10px 6px; display: grid; grid-template-rows: auto 1fr auto; min-width: 0; }
+  .mini-histo > p { margin: 0 0 4px; font: 700 10.5px system-ui; letter-spacing: .08em; text-transform: uppercase; color: var(--car); }
+  .mini-histo .defile { overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent); }
+  .mini-histo .defile > div { animation: monteHisto 18s linear infinite; }
+  .mini-histo .defile p { margin: 0; padding: 3px 0; display: grid; grid-template-columns: 16px 1fr; gap: 5px; font-size: 11.5px; line-height: 1.3; }
+  .mini-histo .defile i { font-style: normal; font-size: 11px; }
+  @keyframes monteHisto { to { transform: translateY(-50%); } }
+  .voir-plus { border: 0; background: none; padding: 2px 0 0; font: 700 11.5px system-ui; color: var(--car); justify-self: end; }
+  .haut > .l { display: flex; gap: 18px; margin-top: 12px; font-size: 12.5px; color: var(--soft); }
+  .haut > .l b { font: 600 17px Georgia, serif; color: var(--ink); }
+
+  .mini-histo .defile > div { animation: none !important; }
+  .mini-histo .defile p.neuf { animation: arrive .7s ease-out; border-radius: 8px; background: #F3E9DE; }
+  .mini-histo .defile p.neuf ~ p { animation: pousse .7s ease-out; }
+  @keyframes arrive { from { transform: translateY(-110%); opacity: 0; } 60% { opacity: 1; } to { transform: none; } }
+  @keyframes pousse { from { transform: translateY(-100%); } to { transform: none; } }
+  .mini-histo .defile { -webkit-mask-image: linear-gradient(#000 75%, transparent) !important; mask-image: linear-gradient(#000 75%, transparent) !important; }
+
+  /* les 2 chiffres : la place libre sous le rond, l'argent dans une case blanche au fin contour caramel */
+  .col-rond { display: grid; justify-items: center; gap: 6px; }
+  .libre { font-size: 11.5px; font-weight: 700; color: var(--car); }
+  .argent { margin-top: 12px; background: #fff; box-shadow: inset 0 0 0 1.5px #C9A88B; border-radius: 16px; padding: 12px; text-align: center; font-size: 11.5px; color: var(--soft); }
+  .argent b { display: block; font: 800 28px 'Fraunces', Georgia, serif; color: #8E5E45; }
+  .haut .libre { text-transform: none; letter-spacing: 0; font-size: 12px; }
+  /* l'écran de connexion de Marie */
+  .cnx { padding: 48px 22px 30px; display: grid; gap: 12px; }
+  .cnx small { font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--car); font-weight: 700; }
+  .cnx > b { font: 500 28px Georgia, serif; margin-bottom: 8px; }
+  .cnx label { display: grid; gap: 5px; font-size: 12.5px; color: var(--soft); }
+  .cnx input { width: 100%; font-size: 16px; padding: 13px 14px; border-radius: 14px; border: 1px solid rgba(43,26,16,.18); background: #fff; font-family: inherit; color: var(--ink); }
+  .cnx .wa { margin-top: 8px; }
+  .cnx .wa:disabled { opacity: .6; }
+  .err { margin: 0; min-height: 18px; font-size: 13px; color: #9A3A2C; }
+  .vide { margin: 4px 2px; font-size: 13px; color: var(--soft); }
+  .sortir { display: block; margin: 18px auto 0; border: 0; background: none; font-size: 12.5px; color: var(--soft); text-decoration: underline; }
+  .charge { padding: 80px 20px; text-align: center; color: var(--soft); font-size: 14px; }
+  .d button:disabled { opacity: .6; }
+  .c .pt[hidden], .c .pt:empty { display: none; }   /* pas de pastille rouge quand il n'y a rien */
+  /* la fiche : ses essais du mois et ce qu'elle a fait */
+  .jg { height: 6px; border-radius: 99px; background: #EAD9C5; overflow: hidden; margin-top: 5px; } .jg i { display: block; height: 100%; background: var(--car); }
+  .acts { background: #fff; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); padding: 2px 12px; }
+  /* mes créneaux */
+  .cr-form { background: #fff; border-radius: 16px; box-shadow: inset 0 0 0 1px var(--line); padding: 12px; display: grid; gap: 8px; }
+  .cr-form .deux { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cr-form label { display: grid; gap: 4px; font-size: 11.5px; color: var(--soft); min-width: 0; }
+  .cr-form input { width: 100%; min-width: 0; font-size: 16px; padding: 10px 11px; border-radius: 12px; border: 1px solid rgba(43,26,16,.18); background: #fff; font-family: inherit; color: var(--ink); }
+  .cr-form .wa { margin: 2px 0 0; }
+  .demande { background: #fff; border-radius: 16px; padding: 12px; box-shadow: inset 0 0 0 2px #C9A88B; display: grid; gap: 10px; font-size: 13.5px; }
+  .demande .deux { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .demande button { border: 0; border-radius: 999px; padding: 10px; font: 700 13px system-ui; }
+  .demande .oui { background: var(--ink); color: #FBF7F2; } .demande .non { background: rgba(43,26,16,.07); }
+  .dt { width: 38px; height: 42px; border-radius: 12px; background: #F3E9DE; display: grid; place-items: center; align-content: center; line-height: 1.05; font: 600 16px Georgia, serif; color: var(--ink); }
+  .dt small { font: 700 9px system-ui; color: var(--car); text-transform: uppercase; }
+  .x { width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(43,26,16,.07); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- CONNEXION -->
+  <section class="ecran" data-e="connexion">
+    <form class="cnx" data-cnx>
+      <small>Espace Marie</small><b>Bonjour Marie 🤎</b>
+      <label for="m-mail">Ton e-mail<input type="email" id="m-mail" autocomplete="email" required></label>
+      <label for="m-mdp">Ton mot de passe<input type="password" id="m-mdp" autocomplete="current-password" required></label>
+      <p class="err" data-cnx-err></p>
+      <button class="wa" data-cnx-go>Entrer</button>
+    </form>
+  </section>
+
+  <section class="ecran on" data-e="attente"><p class="charge">Chargement de ton espace…</p></section>
+
+  <!-- ACCUEIL -->
+  <section class="ecran" data-e="accueil">
+    <div class="haut"><small>Espace Marie</small><b>Bonjour Marie 🤎</b>
+      <div class="jauge"><div class="col-rond"><div class="rond" data-rond><div><span><b data-nb></b>places</span></div></div><small class="libre" data-reste></small></div>
+        <div class="mini-histo"><p>📜 Historique</p><div class="defile"><div data-defile></div></div><button class="voir-plus" data-go="historique">Voir plus ›</button></div></div>
+      <div class="argent"><b data-ca></b>générés ce mois</div></div>
+    <div class="corps">
+      <div class="cases">
+        <button class="c large" data-go="clientes"><i>👭</i><b>Mes clientes</b><small data-c-cli></small></button>
+        <button class="c large" data-go="creneaux"><i>🗓️</i><b>Mes créneaux</b><small data-c-cre></small><span class="pt" data-c-cre-n></span></button>
+        <button class="c" data-go="essais"><i>📸</i><b>Leurs essais</b><small data-c-ess></small></button>
+        <button class="c" data-go="arrivees"><i>👋</i><b>Arrivées · départs</b><small data-c-arr></small></button>
+        <button class="c" data-go="gratuit"><i>📩</i><b>Essai gratuit</b><small data-c-gra></small></button>
+        <button class="c" data-go="roue"><i>🎡</i><b>La roue</b><small data-c-roue></small></button>
+        <button class="c" data-go="paiements"><i>⚠️</i><b>Paiements</b><small data-c-pay></small><span class="pt" data-c-pay-n></span></button>
+        <button class="c" data-go="cadeaux"><i>🎁</i><b>Cartes cadeaux</b><small data-c-cad></small></button>
+      </div>
+    </div>
+    <button class="sortir" data-sortir>Me déconnecter</button>
+  </section>
+
+  <!-- MES CLIENTES -->
+  <section class="ecran" data-e="clientes">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Mes clientes</b></div>
+    <div class="in"><input class="search" type="search" id="m-cherche" placeholder="Chercher une cliente…" data-search aria-label="Chercher une cliente"><div data-liste style="display:grid;gap:8px"></div></div>
+  </section>
+
+  <!-- FICHE CLIENTE -->
+  <section class="ecran" data-e="fiche">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Sa fiche</b></div>
+    <div class="in" data-fiche></div>
+  </section>
+
+  <!-- MES CRÉNEAUX -->
+  <section class="ecran" data-e="creneaux">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Mes créneaux</b></div>
+    <div class="in">
+      <div data-cr-demandes style="display:grid;gap:8px"></div>
+      <p style="margin:0 2px;font-size:13px;color:#8A7A70">Une place s’est libérée ? Mets-la ici : toutes tes membres la voient dans le club et peuvent te la demander. C’est toi qui confirmes.</p>
+      <form class="cr-form" data-cr-form>
+        <div class="deux"><label for="cr-jour">Le jour<input type="date" id="cr-jour" required></label><label for="cr-heure">L’heure<input type="time" id="cr-heure" step="900" required></label></div>
+        <label for="cr-note">Pour quoi ? <span style="opacity:.7">(facultatif)</span><input type="text" id="cr-note" maxlength="80" placeholder="Pose ou remplissage"></label>
+        <p class="err" data-cr-err></p>
+        <button class="wa" data-cr-go>Afficher ce créneau</button>
+      </form>
+      <p class="sous">En ce moment dans le club</p>
+      <div data-cr-liste style="display:grid;gap:8px"></div>
+    </div>
+  </section>
+
+  <!-- ESSAIS -->
+  <section class="ecran" data-e="essais">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Leurs essais</b></div>
+    <div class="in"><p style="margin:0 2px;font-size:13px;color:#8A7A70">Ce que tes clientes ont essayé avec le Photo test. Touche une photo pour la voir en grand.</p><div class="essais" data-essais></div></div>
+  </section>
+  <section class="ecran" data-e="essai">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b data-essai-t></b></div>
+    <div class="in" data-essai></div>
+  </section>
+
+  <!-- ARRIVÉES / DÉPARTS -->
+  <section class="ecran" data-e="arrivees">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Arrivées · départs</b></div>
+    <div class="in" data-arrivees></div>
+  </section>
+
+  <!-- ESSAI GRATUIT -->
+  <section class="ecran" data-e="gratuit">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Essai gratuit</b></div>
+    <div class="in" data-gratuit></div>
+  </section>
+
+  <!-- ROUE -->
+  <section class="ecran" data-e="roue">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b data-roue-t>La roue</b></div>
+    <div class="in" data-roue></div>
+  </section>
+
+  <!-- PAIEMENTS -->
+  <section class="ecran" data-e="paiements">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Paiements</b></div>
+    <div class="in" data-pay></div>
+  </section>
+
+  <!-- CARTES CADEAUX -->
+  <section class="ecran" data-e="cadeaux">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Cartes cadeaux</b></div>
+    <div class="in" data-cadeaux></div>
+  </section>
+
+  <!-- HISTORIQUE -->
+  <section class="ecran" data-e="historique">
+    <div class="bar"><button class="back" data-back aria-label="Retour">‹</button><b>Historique</b></div>
+    <div class="in"><div class="histo" data-histo></div></div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.0/dist/umd/supabase.js"></script>
+<script src="club-api.js"></script>
+<script>
+  /* L'Espace Marie en vrai : mêmes écrans que la maquette validée (espace-marie-app.html), remplis par le serveur */
+  var $ = function (q) { return document.querySelector(q); };
+  var MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  var ICONE = { arrivee: '👑', depart: '👋', roue: '🎡', essai: '📸', essai_gratuit: '📩', paiement: '⚠️', cadeau: '🎁', cagnotte: '💰', reduction: '💅', naissance: '🔮', creneau: '🗓️' };
+  var T = null, H = [], C = [], nouveau = false, ficheId = null;
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function jour(iso) { var d = new Date(iso); return 'le ' + d.getDate() + (d.getDate() === 1 ? 'er' : '') + ' ' + MOIS[d.getMonth()]; }
+  function moisAn(iso) { var d = new Date(iso); return MOIS[d.getMonth()] + ' ' + d.getFullYear(); }
+  function ilya(iso) {
+    var d = new Date(iso), s = (Date.now() - d) / 1000;
+    if (s < 90) return 'à l’instant';
+    if (s < 3600) return 'il y a ' + Math.round(s / 60) + ' min';
+    if (s < 86400 && d.getDate() === new Date().getDate()) return 'il y a ' + Math.round(s / 3600) + ' h';
+    if (s < 172800) return 'hier';
+    return d.getDate() + ' ' + ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'][d.getMonth()];
+  }
+  function masque(m) { var p = m.split('@'); return p[0].slice(0, 4) + '…@' + (p[1] || ''); }
+  function euros(c) { return (c / 100).toFixed(2).replace('.', ',').replace(',00', '') + ' €'; }
+  function nom(c) { return esc(c.prenom + ' ' + c.nom); }
+  function court(c) { return esc(c.prenom + (c.nom ? ' ' + c.nom.charAt(0) + '.' : '')); }
+  function debutMois() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); }
+  function membres() { return C.filter(function (c) { return c.statut !== 'termine'; }); }
+  function aFaire(c) { return T.a_faire.filter(function (f) { return f.user_id === c.id; }); }
+
+  /* navigation (comme la maquette) */
+  var pile = ['accueil'];
+  function va(e, sansPile) {
+    document.querySelectorAll('.ecran').forEach(function (x) { x.classList.toggle('on', x.dataset.e === e); });
+    if (!sansPile) pile.push(e); scrollTo(0, 0); brun(document.querySelector('[data-e="' + e + '"]'));
+  }
+  document.addEventListener('click', function (ev) {
+    var g = ev.target.closest('[data-go]'); if (g) { va(g.dataset.go); return; }
+    if (ev.target.closest('[data-back]')) { pile.pop(); va(pile[pile.length - 1] || 'accueil', true); }
+  });
+
+  /* ---------- accueil ---------- */
+  function histo(n) { return H.slice(0, n).map(function (h) { return '<div class="h"><i>' + (ICONE[h.type] || '📜') + '</i><span>' + esc(h.texte) + '</span><time>' + ilya(h.cree_le) + '</time></div>'; }).join('') || '<p class="vide">Rien pour l’instant.</p>'; }
+  function accueil() {
+    var pl = T.places, pris = pl.places - pl.libres, mb = membres(), m0 = debutMois();
+    var payants = mb.filter(function (c) { return c.statut === 'actif'; }).length, ko = mb.filter(function (c) { return c.statut === 'impaye'; }).length;
+    $('[data-ca]').textContent = euros(payants * T.prix_cents);
+    $('[data-nb]').textContent = pris + '/' + pl.places;
+    $('[data-reste]').textContent = pl.libres + (pl.libres > 1 ? ' places libres' : ' place libre') + ' · ' + (pl.vague === 1 ? '1re' : pl.vague + 'e') + ' vague';
+    var pc = pl.places ? pris / pl.places * 100 : 0;
+    $('[data-rond]').style.background = 'conic-gradient(#8E5E45 0 ' + pc + '%, #EAD9C5 ' + pc + '% 100%)';
+    var red = T.a_faire.length + mb.filter(function (c) { return c.cagnotte >= 500; }).length;
+    $('[data-c-cli]').textContent = mb.length + (mb.length > 1 ? ' membres' : ' membre') + ' · ' + red + (red > 1 ? ' réductions à faire' : ' réduction à faire');
+    $('[data-c-ess]').textContent = T.essais_semaine + ' cette semaine';
+    var dem = T.creneaux.filter(function (c) { return c.statut === 'demande'; }).length, lib = T.creneaux.filter(function (c) { return c.statut === 'libre'; }).length;
+    $('[data-c-cre]').textContent = dem ? dem + (dem > 1 ? ' demandes à confirmer' : ' demande à confirmer') : lib ? lib + (lib > 1 ? ' créneaux affichés' : ' créneau affiché') : 'Aucun créneau affiché';
+    $('[data-c-cre-n]').textContent = dem || ''; $('[data-c-cre-n]').hidden = !dem;
+    var arr = C.filter(function (c) { return new Date(c.debut) >= m0; }).length, dep = departs().length;
+    $('[data-c-arr]').textContent = '+' + arr + ' · -' + dep + ' ce mois';
+    $('[data-c-gra]').textContent = T.gratuits.length + ' e-mails · ' + T.gratuits.filter(function (g) { return g.membre; }).length + ' membres';
+    $('[data-c-roue]').textContent = T.roue.length + (T.roue.length > 1 ? ' tours ce mois' : ' tour ce mois');
+    $('[data-c-pay]').textContent = ko ? ko + ' pas passé' + (ko > 1 ? 's' : '') : 'Tout est payé ✓';
+    $('[data-c-pay-n]').textContent = ko || ''; $('[data-c-pay-n]').hidden = !ko;
+    var act = T.cadeaux.filter(function (c) { return c.activee_le; }).length;
+    $('[data-c-cad]').textContent = T.cadeaux.length ? T.cadeaux.length + ' · ' + act + (act > 1 ? ' activées' : ' activée') : 'Aucune pour l’instant';
+    $('[data-histo]').innerHTML = histo(H.length);
+    /* le carré ne bouge pas… sauf quand une nouveauté arrive : elle glisse en haut */
+    $('[data-defile]').innerHTML = H.slice(0, 5).map(function (h, k) { return '<p' + (k === 0 && nouveau ? ' class="neuf"' : '') + '><i>' + (ICONE[h.type] || '📜') + '</i><span>' + esc(h.texte) + '</span></p>'; }).join('') || '<p><i></i><span>Rien pour l’instant</span></p>';
+    nouveau = false; brun($('.haut'));
+  }
+
+  /* ---------- clientes ---------- */
+  function tags(c) {
+    var t = [];
+    if (c.statut === 'impaye') t.push('<span class="t ko">Paiement ✗</span>');
+    if (c.statut === 'cadeau') t.push('<span class="t be">Mois offert</span>');
+    if (c.arret) t.push('<span class="t ko">Part ' + jour(c.fin) + '</span>');
+    if (c.cagnotte >= 500) t.push('<span class="t be">Cagnotte ' + euros(c.cagnotte) + '</span>');
+    aFaire(c).forEach(function (f) { t.push('<span class="t be">' + (f.type === 'anniversaire' ? '🎂 Anniv' : f.type === 'parrainage' ? '-20 %' : 'Pose offerte') + '</span>'); });
+    return t.join('') || '<span class="t ok">✓</span>';
+  }
+  function liste() {
+    var q = ($('[data-search]').value || '').toLowerCase(), mb = membres();
+    $('[data-liste]').innerHTML = mb.map(function (c) {
+      if (q && (c.prenom + ' ' + c.nom + ' ' + c.email).toLowerCase().indexOf(q) < 0) return '';
+      return '<button class="row" data-cli="' + c.id + '"><span class="av">' + esc(c.prenom.charAt(0) || '?') + '</span><span><b>' + nom(c) + '</b><small>Membre depuis ' + moisAn(c.debut) + '</small></span><span class="tags">' + tags(c) + '</span></button>';
+    }).join('') || '<p class="vide">' + (mb.length ? 'Personne avec ce nom dans le club.' : 'Pas encore de membre.') + '</p>';
+    document.querySelectorAll('[data-cli]').forEach(function (b) { b.onclick = function () { fiche(b.dataset.cli); }; });
+    brun($('[data-liste]'));
+  }
+  function fiche(id, sansNav) {
+    var c = C.filter(function (x) { return x.id === id; })[0]; if (!c) return;
+    ficheId = id;
+    var etat = c.statut === 'impaye' ? '⚠️ paiement pas passé' : c.statut === 'cadeau' ? 'mois offert (carte cadeau)' : c.arret ? 'part ' + jour(c.fin) : 'paiement à jour ✓';
+    var d = [];
+    d.push('<div class="fiche-h"><span class="av">' + esc(c.prenom.charAt(0) || '?') + '</span><span><b>' + nom(c) + '</b><small>Membre depuis ' + moisAn(c.debut) + ' · ' + etat + '</small><small>' + esc(c.email) + (c.marraine ? ' · venue grâce à ' + esc(c.marraine) : '') + '</small></span></div>');
+    d.push('<p class="sous" style="margin-top:0">Ses réductions</p>');
+    d.push('<div class="d"><span>💅 French offerte<small>À chaque French</small></span><span class="t ok">Toujours</span></div>');
+    d.push('<div class="d"><span>💰 Cagnotte : <b>' + euros(c.cagnotte) + '</b><small>Par tranches de 5 €</small></span>' + (c.cagnotte >= 500 ? '<button data-act="cag">-5 € utilisés</button>' : '<span class="t">pas assez</span>') + '</div>');
+    aFaire(c).forEach(function (f, k) {
+      if (f.type === 'anniversaire') d.push('<div class="d"><span>🎂 Anniversaire<small>-5 € ce mois-ci</small></span><button data-act="anniv" data-k="' + k + '">-5 € appliqués</button></div>');
+      if (f.type === 'parrainage') d.push('<div class="d"><span>💌 Parrainage<small>' + esc(f.libelle) + '</small></span><button data-act="parr" data-k="' + k + '">-20 % appliqués</button></div>');
+      if (f.type === 'pose_offerte') d.push('<div class="d"><span>🎡 Pose offerte<small>Gagnée à la roue</small></span><button data-act="pose" data-k="' + k + '">Pose faite</button></div>');
+    });
+    var q = T.quota || 15, n = Math.min(c.essais_mois || 0, q);
+    d.push('<div class="d"><span>📸 Essais photo<small>' + n + ' utilisé' + (n > 1 ? 's' : '') + ' sur ' + q + ' ce mois</small><div class="jg"><i style="width:' + (n / q * 100) + '%"></i></div></span><span class="t be">' + (q - n) + ' restant' + (q - n > 1 ? 's' : '') + '</span></div>');
+    if (c.activite && c.activite.length) d.push('<p class="sous">Ce qu’elle a fait</p><div class="acts">' + c.activite.map(function (h) { return '<div class="h"><i>' + (ICONE[h.type] || '📜') + '</i><span>' + esc(h.texte) + '</span><time>' + ilya(h.le) + '</time></div>'; }).join('') + '</div>');
+    if (c.essai && c.essai.url) d.push('<p class="sous">Son dernier essai</p><div class="grand" style="background-image:url(\'' + c.essai.url + '\')"></div><p style="margin:0 2px;font-size:13px;color:#8A7A70">' + esc([c.essai.forme, c.essai.theme].filter(Boolean).join(' · ')) + ' · ' + jour(c.essai.le) + '</p>');
+    if (c.statut === 'impaye') d.push('<a class="wa" style="display:block;text-align:center;text-decoration:none" href="mailto:' + esc(c.email) + '?subject=' + encodeURIComponent('Ton paiement Club Dilerna') + '">Lui écrire un e-mail</a><p class="vide" style="text-align:center">' + esc(c.email) + '</p>');
+    $('[data-fiche]').innerHTML = d.join('');
+    var faits = aFaire(c);
+    document.querySelectorAll('[data-act]').forEach(function (b) { b.onclick = function () {
+      if (b.disabled) return; b.disabled = true; b.textContent = '…';
+      var f = faits[+b.dataset.k], a = b.dataset.act;
+      var p = a === 'cag' ? Club.marie.utiliserCagnotte(c.id, 5)
+        : a === 'anniv' ? Club.marie.marquerFait('anniversaire', c.id)
+        : a === 'parr' ? Club.marie.marquerFait('parrainage', f.filleule_id)
+        : Club.marie.marquerFait('pose_offerte', c.id, f.ref);
+      p.then(function () { b.classList.add('fait'); b.textContent = 'Fait ✓'; return charge(true); })
+       .catch(function (x) { b.disabled = false; b.textContent = 'Réessayer'; alerte(x.message); });
+    }; });
+    brun($('[data-fiche]'));
+    if (!sansNav) va('fiche');
+  }
+  function alerte(t) { var p = document.createElement('p'); p.className = 'err'; p.textContent = t; $('[data-fiche]').appendChild(p); }
+
+  /* ---------- les autres écrans ---------- */
+  function essais() {
+    $('[data-essais]').innerHTML = T.essais.map(function (e, i) { return '<button data-es="' + i + '"><i style="background-image:url(\'' + e.url + '\')"></i><span><b>' + esc(e.qui) + '</b>' + esc([e.forme, e.theme].filter(Boolean).join(' · ') || ilya(e.le)) + '</span></button>'; }).join('') || '<p class="vide">Pas encore d’essai photo.</p>';
+    document.querySelectorAll('[data-es]').forEach(function (b) { b.onclick = function () {
+      var e = T.essais[+b.dataset.es]; $('[data-essai-t]').textContent = e.qui;
+      $('[data-essai]').innerHTML = '<div class="grand" style="background-image:url(\'' + e.url + '\')"></div><div class="carte-info"><b>' + esc([e.forme, e.theme].filter(Boolean).join(' · ') || 'Essai photo') + '</b><br>Essayé ' + jour(e.le) + '. Prépare tes couleurs avant sa venue 💅</div>';
+      va('essai');
+    }; });
+  }
+  function departs() { var m0 = debutMois(); return C.filter(function (c) { return (c.arret || c.statut === 'termine') && c.fin && new Date(c.fin) >= m0; }); }
+  function arrivees() {
+    var m0 = debutMois(), arr = C.filter(function (c) { return new Date(c.debut) >= m0; }), dep = departs();
+    var mails = T.gratuits.map(function (g) { return g.email; });
+    function source(c) { return c.marraine ? 'grâce à ' + esc(c.marraine) : c.statut === 'cadeau' ? 'carte cadeau' : mails.indexOf(c.email) >= 0 ? 'essai gratuit' : ''; }
+    function duree(c) { var n = Math.max(1, Math.round((new Date(c.fin) - new Date(c.debut)) / 2629800000)); return 'membre ' + n + ' mois'; }
+    $('[data-arrivees]').innerHTML = '<div class="chiffres"><div><b>+' + arr.length + '</b>' + (arr.length > 1 ? 'nouvelles membres' : 'nouvelle membre') + '</div><div><b>-' + dep.length + '</b>' + (dep.length > 1 ? 'désabonnées' : 'désabonnée') + '</div></div>' +
+      '<p class="sous">Arrivées</p>' + (arr.map(function (c) { return '<div class="row"><span class="av">' + esc(c.prenom.charAt(0)) + '</span><span><b>' + nom(c) + '</b><small>' + jour(c.debut) + (source(c) ? ' · ' + source(c) : '') + '</small></span><span class="t ok">Nouvelle</span></div>'; }).join('') || '<p class="vide">Personne ce mois-ci.</p>') +
+      '<p class="sous">Départs</p>' + (dep.map(function (c) { return '<div class="row"><span class="av">' + esc(c.prenom.charAt(0)) + '</span><span><b>' + nom(c) + '</b><small>' + duree(c) + ' · ' + (new Date(c.fin) > new Date() ? 'part ' : 'partie ') + jour(c.fin) + '</small></span><span class="t ko">Désabonnée</span></div>'; }).join('') || '<p class="vide">Personne ce mois-ci.</p>');
+  }
+  function gratuit() {
+    var g = T.gratuits, oui = g.filter(function (x) { return x.membre; }), non = g.filter(function (x) { return !x.membre; });
+    function ligne(x) {
+      var t = x.membre ? '<span class="t ok">Membre ✓</span>' : x.desinscrit ? '<span class="t ko">Pas de mail</span>' : '<span class="t be">En attente</span>';
+      return '<div class="row"><span class="av">' + esc(x.email.charAt(0).toUpperCase()) + '</span><span><b>' + esc(masque(x.email)) + '</b><small>essai ' + jour(x.le) + (x.desinscrit && !x.membre ? ' · ne veut pas d’e-mails' : '') + '</small></span>' + t + '</div>';
+    }
+    $('[data-gratuit]').innerHTML = '<div class="chiffres"><div><b>' + g.length + '</b>ont fait l’essai</div><div><b>' + oui.length + '</b>' + (oui.length > 1 ? 'devenues membres' : 'devenue membre') + '</div></div>' +
+      '<p class="sous">Pas encore membres</p>' + (non.map(ligne).join('') || '<p class="vide">Personne.</p>') +
+      '<p class="sous">Devenues membres</p>' + (oui.map(ligne).join('') || '<p class="vide">Personne pour l’instant.</p>');
+  }
+  function roue() {
+    var GAIN = { '-1 €': 1, '-5 €': 5, '-10 €': 10 }, tot = T.roue.reduce(function (a, r) { return a + (GAIN[r.resultat] || 0); }, 0);
+    $('[data-roue-t]').textContent = 'La roue ' + (/^[aeiou]/.test(MOIS[new Date().getMonth()]) ? 'd’' : 'de ') + MOIS[new Date().getMonth()];
+    $('[data-roue]').innerHTML = '<div class="chiffres"><div><b>' + T.roue.length + '</b>' + (T.roue.length > 1 ? 'tours joués' : 'tour joué') + '</div><div><b>' + tot + ' €</b>gagnés au total</div></div>' +
+      (T.roue.map(function (r) { var g = GAIN[r.resultat]; return '<div class="row"><span class="av">' + esc(r.qui.charAt(0)) + '</span><span><b>' + esc(r.qui) + '</b><small>' + jour(r.le) + '</small></span><span class="t' + (r.resultat === 'Perdu' ? '' : ' be') + '">' + (g ? '+' + g + ' €' : r.resultat === 'Perdu' ? 'perdu' : 'Pose offerte') + '</span></div>'; }).join('') || '<p class="vide">Personne n’a encore tourné la roue ce mois-ci.</p>');
+  }
+  function paiements() {
+    var mb = membres(), m = MOIS[new Date().getMonth()];
+    $('[data-pay]').innerHTML = (mb.map(function (c) {
+      var t = c.statut === 'impaye' ? '<span class="t ko">Pas passé</span>' : c.statut === 'cadeau' ? '<span class="t be">Offert</span>' : '<span class="t ok">Payé ✓</span>';
+      return '<div class="row"><span class="av">' + esc(c.prenom.charAt(0)) + '</span><span><b>' + nom(c) + '</b><small>' + m.charAt(0).toUpperCase() + m.slice(1) + ' · ' + euros(T.prix_cents) + '</small></span>' + t + '</div>';
+    }).join('') || '<p class="vide">Pas encore de membre.</p>') +
+      '<p style="margin:6px 2px 0;font-size:12px;color:#8A7A70">Si un paiement ne passe pas, ta cliente reçoit tout de suite le message pour changer sa carte. Sans nouvelle carte après 7 jours, son espace est mis en pause.</p>';
+  }
+  function cadeaux() {
+    $('[data-cadeaux]').innerHTML = T.cadeaux.map(function (c) {
+      var t = c.activee_le ? '<span class="t ok">Activée ✓</span>' : new Date(c.expire_le) < new Date() ? '<span class="t ko">Expirée</span>' : '<span class="t be">Pas encore</span>';
+      return '<div class="row"><span class="av">🎁</span><span><b>' + esc(c.code) + '</b><small>De ' + esc(c.de || '?') + ' pour ' + esc(c.pour || '?') + ' · ' + jour(c.le) + '</small></span>' + t + '</div>';
+    }).join('') || '<p class="vide">Aucune carte cadeau pour l’instant.</p>';
+    brun($('[data-cadeaux]'));
+  }
+
+  /* ---------- mes créneaux ---------- */
+  function quand(iso) { return new Date(iso).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).replace(':', ' h ').replace(/ h 00$/, ' h'); }
+  function creneaux() {
+    var dem = T.creneaux.filter(function (c) { return c.statut === 'demande'; });
+    $('[data-cr-demandes]').innerHTML = dem.map(function (c) {
+      return '<div class="demande"><span>🔔 <b>' + esc(c.qui) + '</b> veut le créneau du <b>' + quand(c.debut) + '</b></span><div class="deux"><button class="oui" data-cr-rep="' + c.id + '" data-oui="1">Confirmer</button><button class="non" data-cr-rep="' + c.id + '">Refuser</button></div></div>';
+    }).join('');
+    var aff = T.creneaux.filter(function (c) { return c.statut !== 'demande'; });
+    $('[data-cr-liste]').innerHTML = aff.map(function (c) {
+      var d = new Date(c.debut), t = c.statut === 'confirme' ? '<span class="t ok">' + esc(c.qui) + ' ✓</span>' : '<span class="t be">Libre</span>';
+      return '<div class="row" style="grid-template-columns:38px 1fr auto auto"><span class="dt">' + d.toLocaleDateString('fr-FR', { day: 'numeric', timeZone: 'Europe/Paris' }) + '<small>' + d.toLocaleDateString('fr-FR', { month: 'short', timeZone: 'Europe/Paris' }) + '</small></span><span><b>' + quand(c.debut) + '</b><small>' + esc(c.note) + '</small></span>' + t + '<button class="x" data-cr-x="' + c.id + '" aria-label="Enlever ce créneau">✕</button></div>';
+    }).join('') || '<p class="vide">Aucun créneau pour l’instant.</p>';
+    document.querySelectorAll('[data-cr-rep]').forEach(function (b) { b.onclick = function () {
+      b.disabled = true;
+      Club.marie.repondreCreneau(b.dataset.crRep, !!b.dataset.oui).then(function () { return charge(true); })
+        .catch(function (x) { b.disabled = false; var p = document.createElement('p'); p.className = 'err'; p.textContent = x.message; b.closest('.demande').appendChild(p); });
+    }; });
+    document.querySelectorAll('[data-cr-x]').forEach(function (b) { b.onclick = function () {
+      b.disabled = true; Club.marie.enleverCreneau(b.dataset.crX).then(function () { return charge(true); }).catch(function () { b.disabled = false; });
+    }; });
+    brun($('[data-e="creneaux"]'));
+  }
+  $('[data-cr-form]').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var j = $('#cr-jour').value, h = $('#cr-heure').value, er = $('[data-cr-err]'), b = $('[data-cr-go]'); er.textContent = '';
+    if (!j || !h) { er.textContent = 'Choisis le jour et l’heure.'; return; }
+    var p = j.split('-'), hm = h.split(':'), debut = new Date(+p[0], +p[1] - 1, +p[2], +hm[0], +hm[1]);   /* l'heure du téléphone de Marie (Corse = heure de Paris) */
+    b.disabled = true; b.textContent = 'J’affiche…';
+    Club.marie.ajouterCreneau(debut.toISOString(), $('#cr-note').value.trim()).then(function () {
+      $('#cr-jour').value = ''; $('#cr-heure').value = ''; $('#cr-note').value = '';
+      return charge(true);
+    }).catch(function (x) { er.textContent = x.message; }).then(function () { b.disabled = false; b.textContent = 'Afficher ce créneau'; });
+  });
+
+  /* ---------- chargement ---------- */
+  async function charge(garderEcran) {
+    var r = await Promise.all([Club.marie.tableau(), Club.marie.historique(60)]);
+    T = r[0]; C = T.clientes; H = r[1];
+    accueil(); liste(); creneaux(); essais(); arrivees(); gratuit(); roue(); paiements(); cadeaux();
+    if (garderEcran && ficheId && pile[pile.length - 1] === 'fiche') fiche(ficheId, true);
+    brun(document.body);
+  }
+  var direct = false;
+  async function entrer() {
+    await charge();
+    pile = ['accueil']; va('accueil', true);
+    if (!direct) {
+      direct = true;
+      Club.marie.enDirect(function (ev) { H.unshift(ev); nouveau = true; charge(true).catch(function () { accueil(); }); });
+      /* les photos ont des adresses valables 1 h : on rafraîchit tout de temps en temps */
+      setInterval(function () { charge(true).catch(function () {}); }, 30 * 60 * 1000);
+    }
+  }
+  $('[data-search]').oninput = liste;
+  $('[data-cnx]').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var b = $('[data-cnx-go]'), er = $('[data-cnx-err]'); er.textContent = ''; b.disabled = true; b.textContent = 'Connexion…';
+    try {
+      await Club.connexion($('#m-mail').value.trim(), $('#m-mdp').value);
+      if (!(await Club.marie.estAdmin())) { await Club.deconnexion(); throw new Error('Ce compte n’a pas accès à l’Espace Marie.'); }
+      $('#m-mdp').value = '';
+      await entrer();
+    } catch (x) { er.textContent = x.message; }
+    b.disabled = false; b.textContent = 'Entrer';
+  });
+  $('[data-sortir]').onclick = async function () { await Club.deconnexion(); location.reload(); };
+
+  var EMO = /(\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic})*)/u;
+  function brun(root) {
+    if (!root) return;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n, l = [];
+    while ((n = w.nextNode())) if (EMO.test(n.nodeValue) && !n.parentNode.closest('.emo-m')) l.push(n);
+    l.forEach(function (t) { var f = document.createDocumentFragment(); t.nodeValue.split(EMO).forEach(function (x, i) { if (!x) return; if (i % 2) { var e = document.createElement('span'); e.className = 'emo-m'; e.textContent = x; f.appendChild(e); } else f.appendChild(document.createTextNode(x)); }); t.parentNode.replaceChild(f, t); });
+  }
+  brun(document.body);
+  (async function () {
+    try {
+      var s = await Club.session();
+      if (s && await Club.marie.estAdmin()) { await entrer(); return; }
+    } catch (e) {}
+    va('connexion', true);
+  })();
+</script>
+</body>
+</html>
