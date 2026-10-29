@@ -5039,7 +5039,8 @@
     if (body.scrollTop > 60) sheet.classList.add('fp-bas'); else if (body.scrollTop < 30) sheet.classList.remove('fp-bas');
   }, { passive: true });
   // fermer = revenir sur dilerna.fr (sauf l'écran de connexion, qui ramène sur la fiche)
-  var phone = sheet.closest('.phone'), avant = '';
+  var phone = sheet.closest('.phone');
+  var avant = !phone ? '' : phone.classList.contains('open') ? 'fiche' : phone.classList.contains('space-open') ? 'espace' : '';
   if (phone) new MutationObserver(function () {
     var ouvert = phone.classList.contains('open'), espace = phone.classList.contains('space-open');
     var etat = ouvert ? 'fiche' : espace ? 'espace' : '';
