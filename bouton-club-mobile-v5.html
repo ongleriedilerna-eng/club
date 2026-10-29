@@ -2069,6 +2069,18 @@
 
   /* à la fin de la liste : offrir le club, les petites lignes et les liens */
   .fp-fin { display: grid; gap: 12px; margin-top: 18px; }
+  /* Louise joue dans la case « Les jeux » (30/10/2026) : elle trottine et fait rebondir une balle sur son nez */
+  .space .bubble.jeux-big { position: relative; overflow: hidden; padding-bottom: 68px !important; }
+  .jx-lou { position: absolute; bottom: 10px; left: 6%; width: 50px; height: 33px; pointer-events: none; animation: jxLou 9s linear infinite; }
+  .jx-lou > svg { width: 100%; height: 100%; overflow: visible; display: block; }
+  .jx-lou .lw-txt, .jx-lou .lw-txt2 { display: none !important; }
+  .jx-lou .jx-balle { position: absolute; left: 33px; top: -8px; width: 10px; height: 10px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #F3E9DE 0 18%, #C9A27E 22% 100%); box-shadow: inset -1px -1px 0 rgba(78,46,34,.35); animation: jxBalle .45s cubic-bezier(.3,0,.7,1) infinite alternate; }
+  .space .bubble.jeux-big::after { content: ""; position: absolute; left: 6%; right: 6%; bottom: 9px; height: 1px; background: rgba(43,26,16,.08); }
+  @keyframes jxLou { 0% { left: 6%; transform: scaleX(1); } 45% { left: calc(94% - 50px); transform: scaleX(1); } 45.01%, 50% { left: calc(94% - 50px); transform: scaleX(-1); }
+    95% { left: 6%; transform: scaleX(-1); } 95.01%, 100% { left: 6%; transform: scaleX(1); } }
+  @keyframes jxBalle { from { transform: translateY(0) scale(1.08, .92); } to { transform: translateY(-11px) scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .jx-lou, .jx-lou .jx-balle { animation: none; } }
   /* le cadeau 🎁 teinté comme les autres emojis (beige/marron) */
   .emo-t, .gift-ico { filter: grayscale(1) sepia(.75) saturate(1.15) brightness(.8); }
   /* écrans pour payer (s'abonner, offrir) : plus compacts, tout tient sur l'écran d'un iPhone */
@@ -2339,14 +2351,14 @@
       </button>
       <p class="home-label">Ton club</p>
       <div class="bubbles">
-        <button type="button" class="bubble duo roue-sq" data-roue-open><i class="bem" data-e="9"></i><b>La roue du mois</b><small>1 tour offert par mois</small></button>
-        <button type="button" class="bubble duo quiz-sq" data-quiz-open><i class="bem" data-e="15"></i><b>Le quiz du <span class="mois-c">mois<svg class="couronne" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 18 2.5 8l5 4.2L12 5l4.5 7.2 5-4.2-1 10z" fill="#B98A6E" stroke="#5A3524" stroke-width="1.2" stroke-linejoin="round"/></svg></span></b><small>Sois la baddie du mois</small></button>
         <div class="tip">
           <span class="tip-ico" aria-hidden="true"><svg viewBox="0 0 40 64"><rect x="13" y="2" width="14" height="18" rx="3" fill="#2B1A10"/><rect x="11" y="19" width="18" height="5" rx="1.5" fill="#D5C6AF"/><rect x="4" y="23" width="32" height="38" rx="11" fill="#C9A27E"/><rect x="9" y="29" width="4" height="22" rx="2" fill="rgba(255,255,255,.55)"/></svg></span>
           <span class="tip-txt"><span class="tip-k">Ton conseil de la semaine</span><b data-tip-t></b><small data-tip-d></small></span>
         </div>
-        <button type="button" class="bubble horo-tuile" data-sp-open="horo" data-horo-tuile><span class="horo-sym" aria-hidden="true">✦</span><span class="horo-txt"><b>Ton horoscope des ongles</b><small>Ce que les astres disent de tes ongles</small></span><i class="horo-go" aria-hidden="true">›</i></button>
+        <button type="button" class="bubble duo roue-sq" data-roue-open><i class="bem" data-e="9"></i><b>La roue du mois</b><small>1 tour offert par mois</small></button>
+        <button type="button" class="bubble duo quiz-sq" data-quiz-open><i class="bem" data-e="15"></i><b>Le quiz du <span class="mois-c">mois<svg class="couronne" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 18 2.5 8l5 4.2L12 5l4.5 7.2 5-4.2-1 10z" fill="#B98A6E" stroke="#5A3524" stroke-width="1.2" stroke-linejoin="round"/></svg></span></b><small>Sois la baddie du mois</small></button>
         <button type="button" class="bubble jeux-big" data-sp-open="jeu"><i class="bem" data-e="13"></i><b>Les jeux</b><small>Pour patienter pendant que ta main catalyse</small></button>
+        <button type="button" class="bubble horo-tuile" data-sp-open="horo" data-horo-tuile><span class="horo-sym" aria-hidden="true">✦</span><span class="horo-txt"><b>Ton horoscope des ongles</b><small>Ce que les astres disent de tes ongles</small></span><i class="horo-go" aria-hidden="true">›</i></button>
         <button type="button" class="bubble" data-sp-open="couleur"><i class="bem" data-e="10"></i><b>Nuancier privé</b><small>Tes couleurs exclusives</small></button>
         <button type="button" class="bubble" data-sp-open="gains"><i class="bem" data-e="11"></i><b>Mes gains</b><small>Ce que tu as gagné à la roue</small></button>
         <button type="button" class="bubble" data-sp-open="joker"><i class="bem" data-e="14"></i><b>Mon joker</b><small>1 par an pour annuler</small></button>
@@ -5061,6 +5073,12 @@
     while (t.scrollWidth > t.clientWidth + 1 && fs > 9.5) { fs -= .25; t.style.fontSize = fs + 'px'; }
   }
   cadeaux(document.body); addEventListener('resize', uneLigne);
+  (function () {
+    var jeux = document.querySelector('.space .bubble.jeux-big'), src = document.querySelector('.onb-louise svg');
+    if (!jeux || !src || jeux.querySelector('.jx-lou')) return;
+    var d = document.createElement('span'); d.className = 'jx-lou'; d.setAttribute('aria-hidden', 'true');
+    d.innerHTML = src.outerHTML + '<i class="jx-balle"></i>'; jeux.appendChild(d);
+  })();
   function range() {
     sacs(body);
     // après chaque affichage de la fiche : le titre des avantages, la petite ligne sous la carte, et la fin de liste
