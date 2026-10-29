@@ -2060,6 +2060,8 @@
 
   /* à la fin de la liste : offrir le club, les petites lignes et les liens */
   .fp-fin { display: grid; gap: 12px; margin-top: 18px; }
+  /* plus de page entre deux derrière la fiche : ni « Ouvrir le club », ni fausse barre du bas (on revient directement sur dilerna.fr) */
+  html.reel .phone .site, html.reel .phone .tabbar, html.reel .phone .scrim { visibility: hidden !important; } /* fp-sans-fond */
   .fp-fin .offrir, .fp-fin .legal, .fp-fin .foot-note, .fp-fin .proof { margin: 0 !important; }
   @media (prefers-reduced-motion: reduce) { .sheet .sheet-top, .fp-name, .sheet .sheet-top .deja, .sheet .sheet-foot, .sheet .sheet-foot .cta { transition: none !important; } }
 </style>
@@ -5036,6 +5038,18 @@
   body.addEventListener('scroll', function () {
     if (body.scrollTop > 60) sheet.classList.add('fp-bas'); else if (body.scrollTop < 30) sheet.classList.remove('fp-bas');
   }, { passive: true });
+  // fermer = revenir sur dilerna.fr (sauf l'écran de connexion, qui ramène sur la fiche)
+  var phone = sheet.closest('.phone'), avant = '';
+  if (phone) new MutationObserver(function () {
+    var ouvert = phone.classList.contains('open'), espace = phone.classList.contains('space-open');
+    var etat = ouvert ? 'fiche' : espace ? 'espace' : '';
+    if (!etat && avant && document.documentElement.classList.contains('reel')) {
+      var lock = phone.querySelector('[data-lock]');
+      if (avant === 'espace' && lock && !lock.hidden) phone.classList.add('open');
+      else location.replace('https://dilerna.fr/');
+    }
+    avant = etat || avant;
+  }).observe(phone, { attributes: true, attributeFilter: ['class'] });
   // quand la fiche se rouvre, elle repart du haut
   new MutationObserver(function () { if (!document.querySelector('.phone.open')) { body.scrollTop = 0; sheet.classList.remove('fp-bas'); } })
     .observe(sheet.closest('.phone') || document.body, { attributes: true, attributeFilter: ['class'] });
