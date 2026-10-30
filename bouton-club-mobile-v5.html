@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="fr">
 <head>
+<script>/* 30/10/2026 : pas de page blanche avant la fiche (Marie) */
+if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)club\.dilerna\.fr$/.test(location.hostname))) {
+  document.documentElement.classList.add('club-boot');
+  setTimeout(function () { document.documentElement.classList.remove('club-boot'); }, 4000);
+}</script>
+<style>html.club-boot, html.club-boot body { background: #FDF8F4 !important; } html.club-boot body > * { visibility: hidden !important; } html.club-boot .sheet, html.club-boot .scrim { transition: none !important; }</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Bouton Club Dilerna</title>
@@ -667,7 +673,7 @@
   .extra-title + ul.perks { margin-top: 10px; }
   ul.perks li { background: var(--pill); border-radius: 16px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.4; }
   ul.perks strong { font-weight: 700; }
-  .emo { flex: none; font-family: var(--emoji); font-size: 17px; line-height: 20px; filter: grayscale(1) sepia(.75) saturate(1.15) brightness(.8); }
+  .emo { flex: none; font-family: var(--emoji); font-size: 19px; line-height: 20px; filter: url(#emo-duo); /* 30/10 : deux tons, beige et chocolat (Marie trouvait trop terne) */ }
   ul.perks .emo { width: 22px; text-align: center; }
   ul.chips .emo { font-size: 13px; line-height: 1; }
 
@@ -1556,7 +1562,7 @@
   /* Memory : dos des cartes = le joli flacon de la roue */
   .mc-back .mc-fl { width: 42%; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,.35)); }
 
-  .space .emo-m { filter: grayscale(1) sepia(.75) saturate(1.15) brightness(.8); }
+  .space .emo-m { filter: url(#emo-duo); /* 30/10 : deux tons, beige et chocolat (Marie trouvait trop terne) */ }
   .emo .ico-fl { display: inline-block; vertical-align: -4px; }
 
   /* Revenir sans flèche : les flèches ‹ disparaissent */
@@ -2106,7 +2112,7 @@
   @keyframes jxBalle { from { transform: translateY(0) scale(1.08, .92); } to { transform: translateY(-11px) scale(1); } }
   @media (prefers-reduced-motion: reduce) { .jx-lou, .jx-lou .jx-balle { animation: none; } }
   /* le cadeau 🎁 teinté comme les autres emojis (beige/marron) */
-  .emo-t, .gift-ico { filter: grayscale(1) sepia(.75) saturate(1.15) brightness(.8); }
+  .emo-t, .gift-ico { filter: url(#emo-duo); /* 30/10 : deux tons, beige et chocolat (Marie trouvait trop terne) */ }
   /* écrans pour payer (s'abonner, offrir) : plus compacts, tout tient sur l'écran d'un iPhone */
   .onb-step { gap: 7px !important; padding: 20px 20px calc(18px + env(safe-area-inset-bottom, 0px)) !important; }
   .onb-crown { width: 22px !important; height: 22px !important; }
@@ -2123,6 +2129,7 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="emo-duo" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".3 .59 .11 0 0 .3 .59 .11 0 0 .3 .59 .11 0 0 0 0 0 1 0"/><feComponentTransfer><feFuncR type="table" tableValues=".2 .42 .8 .87"/><feFuncG type="table" tableValues=".1 .2 .66 .76"/><feFuncB type="table" tableValues=".05 .09 .5 .6"/></feComponentTransfer></filter></svg>
 <div class="wrap">
   <div class="variants" role="group" aria-label="Choisir les avantages" hidden>
     <span class="vlabel">Les avantages :</span>
@@ -5155,6 +5162,9 @@
   new MutationObserver(function () { if (!document.querySelector('.phone.open')) { body.scrollTop = 0; sheet.classList.remove('fp-bas'); } })
     .observe(sheet.closest('.phone') || document.body, { attributes: true, attributeFilter: ['class'] });
 })();
+</script>
+<script>/* la fiche est prête (déjà ouverte, plein écran) : on la montre d'un coup */
+requestAnimationFrame(function () { requestAnimationFrame(function () { document.documentElement.classList.remove('club-boot'); }); });
 </script>
 </body>
 </html>
