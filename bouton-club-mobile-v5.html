@@ -3050,8 +3050,10 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)) { err.textContent = 'Écris ton e-mail pour débloquer ton essai'; return; }
       /* en vrai : enregistré sur le serveur (1 essai par e-mail), pour les e-mails de relance chaque semaine si la case est cochée */
       var liste = []; try { liste = JSON.parse(localStorage.getItem('dilerna-essai-mails') || '[]'); } catch (e) {}
-      if (liste.some(function (x) { return x.mail === m; })) { err.textContent = 'Tu as déjà fait ton essai avec cet e-mail'; return; }
-      liste.push({ mail: m, news: !teaser.querySelector('[data-tz-info]').classList.contains('non'), date: new Date().toISOString().slice(0, 10) });
+      /* un e-mail ne compte comme « utilisé » qu'une fois l'essai réussi (fait: true, voir essaiFini) : après un raté, on peut réessayer */
+      if (liste.some(function (x) { return x.mail === m && (x.fait === true || (x.fait === undefined && essaiFait())); })) { err.textContent = 'Tu as déjà fait ton essai avec cet e-mail'; return; }
+      liste = liste.filter(function (x) { return x.mail !== m; });
+      liste.push({ mail: m, news: !teaser.querySelector('[data-tz-info]').classList.contains('non'), date: new Date().toISOString().slice(0, 10), fait: false });
       try { localStorage.setItem('dilerna-essai-mails', JSON.stringify(liste)); } catch (e) {}
       teaser.querySelector('[data-tz-form]').hidden = true;
       ESSAI = true; milkyPw = 'noupi'; phone.querySelector('.space').classList.add('essai');
@@ -3060,6 +3062,7 @@
     phone.querySelector('[data-essai-join]').addEventListener('click', function () { ESSAI = false; phone.querySelector('.space').classList.remove('essai'); hideAll(); phone.classList.remove('space-open'); phone.querySelector('[data-lock]').hidden = false; phone.classList.add('open'); });
     function essaiFini() {
       try { localStorage.setItem('dilerna-essai-offert', '1'); } catch (e) {}
+      try { var l = JSON.parse(localStorage.getItem('dilerna-essai-mails') || '[]'); if (l.length) { l[l.length - 1].fait = true; localStorage.setItem('dilerna-essai-mails', JSON.stringify(l)); } } catch (e) {}
       var b = phone.querySelector('[data-essai-fin]'); if (b) b.hidden = false;
     }
     var pt = phone.querySelector('[data-pt]'), home = phone.querySelector('[data-home]');
@@ -3166,6 +3169,7 @@
       if (ESSAI && essaiFait()) { pt.querySelector('[data-ai]').hidden = true; pt.querySelector('[data-essai-fin]').hidden = false; return; }   /* l'essai offert, c'est une seule fois */
       showInspResult();
       var afterImg = pt.querySelector('[data-rs-after]'), msg = pt.querySelector('[data-ai]');
+      afterImg.style.visibility = 'hidden';   /* pas d'icône d'image cassée (« ? ») tant que le résultat n'est pas arrivé */
       pt.querySelector('[data-rs-before]').src = photoURL; pt.querySelector('[data-rs-thumbimg]').src = photoURL;
       msg.hidden = false; msg.className = 'rs-wait loading'; msg.innerHTML = '<span class="ld"><svg class="ld-fl" viewBox="0 0 40 64" aria-hidden="true"><rect x="13" y="2" width="14" height="18" rx="3" fill="#2B1A10"/><rect x="11" y="19" width="18" height="5" rx="1.5" fill="#D5C6AF"/><rect x="4" y="23" width="32" height="38" rx="11" fill="#8E5E45"/><rect x="9" y="29" width="4" height="22" rx="2" fill="rgba(255,255,255,.55)"/></svg><b>Ta photo est en cours de création</b><small>Patiente encore un peu <i></i><i></i><i></i></small></span>'; pt.querySelector('[data-gal-saved]').hidden = true;
       showBefore(false); pt.querySelectorAll('[data-seg]').forEach(function (x) { x.classList.toggle('on', x.dataset.seg === '1'); });
@@ -3178,7 +3182,7 @@
             longueur: pt.querySelector('[data-pick="longueur"] .on').textContent.toLowerCase() }) });
       }).then(function (r) { return r.json(); }).then(function (d) {
         if (typeof d.left === 'number') showLeft(d.left);
-        if (d.image) { if (ESSAI) essaiFini(); afterImg.src = d.image; msg.hidden = true; pt.querySelectorAll('[data-save] span').forEach(function (x) { x.textContent = /ma photo/.test(x.textContent) ? 'Enregistrer ma photo' : 'Enregistrer'; }); }
+        if (d.image) { if (ESSAI) essaiFini(); afterImg.src = d.image; afterImg.style.visibility = ''; msg.hidden = true; pt.querySelectorAll('[data-save] span').forEach(function (x) { x.textContent = /ma photo/.test(x.textContent) ? 'Enregistrer ma photo' : 'Enregistrer'; }); }
         else if (/manquante/.test(d.error || '')) { msg.hidden = true; }
         else msg.className = 'rs-wait', msg.textContent = window.CLUB_REEL && d.error ? '⚠️ ' + d.error : /429|quota|billing/i.test(d.error || '') ? '⏳ L’essai photo n’est pas encore activé. Réessaie un peu plus tard.' : '⚠️ Oups, l’essai n’a pas marché. Réessaie avec une autre photo.';
       }).catch(function (e) { msg.className = 'rs-wait'; msg.textContent = '⚠️ ' + e; });

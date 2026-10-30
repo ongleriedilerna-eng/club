@@ -528,7 +528,10 @@
       var b = {}; try { b = JSON.parse(opts.body); } catch (e) {}
       return Club.session().then(function (s) {
         var envoi = { image: b.image, inspirations: b.inspirations, forme: b.forme, longueur: b.longueur, theme: b.theme };
-        if (!s) { var l = json('dilerna-essai-mails') || [], d = l[l.length - 1] || {}; envoi.email = d.mail || ''; envoi.news = d.news !== false; }
+        /* essai offert : on envoie toujours l'e-mail, même si le téléphone est déjà connecté à un compte qui n'est pas (encore) membre
+           (sinon le serveur répond « Écris ton e-mail pour recevoir ton essai gratuit. ») */
+        var essaiOffert = !!document.querySelector('.space.essai');
+        if (!s || essaiOffert) { var l = json('dilerna-essai-mails') || [], d = l[l.length - 1] || {}; envoi.email = d.mail || ''; envoi.news = d.news !== false; }
         return Club.essai(envoi);
       }).then(function (d) { return rep({ image: d.image, left: d.restant }); })
         .catch(function (x) { return rep({ error: x.message }); });
