@@ -2782,7 +2782,7 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
     '<li>La French est TOUJOURS offerte : French classique, blanche ou de couleur. Les tout petits nail arts sont offerts aussi.</li>' +
     '<li>Réparation offerte si l’ongle casse ou se décolle tout seul, pas en cas de choc. Je te prends selon mes disponibilités.</li>' +
     '<li>Joker : pour annuler moins de 24 h avant. Il ne se reporte pas d’une année sur l’autre.</li>' +
-    '<li>Roue du club : 1 tour offert par mois. Tes gains s’ajoutent à ta cagnotte et s’utilisent sur tes poses par tranches de 5 €. La cagnotte repart à zéro chaque année, à la date anniversaire de ton abonnement. Jamais remboursée en argent. Chaque année, une pose offerte est en jeu : un(e) seul(e) gagnant(e), tirée au sort parmi les membres, la découvre en tournant la roue.</li>' +
+    '<li>Roue du club : 1 tour offert par mois. Tes gains s’ajoutent à ta cagnotte et s’utilisent sur tes poses par tranches de 5 €. La cagnotte repart à zéro chaque année, à la date anniversaire de ton abonnement. Jamais remboursée en argent. Si tu te désabonnes, ta cagnotte est perdue : tout repart à zéro. Chaque année, une pose offerte est en jeu : un(e) seul(e) gagnant(e), tirée au sort parmi les membres, la découvre en tournant la roue.</li>' +
     '<li>Parrainage : -20 % sur ta prochaine pose dès que ton ami(e) s’abonne (une fois ses 14 jours pour changer d’avis passés).</li>' +
     '<li>Paiement automatique chaque mois (carte ou Apple Pay), même si tu ne viens pas ce mois-là.</li>' +
     '<li>Tu t’abonnes en ligne ? Tu as 14 jours pour changer d’avis, sans frais.</li>' +
@@ -5161,6 +5161,111 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
   // quand la fiche se rouvre, elle repart du haut
   new MutationObserver(function () { if (!document.querySelector('.phone.open')) { body.scrollTop = 0; sheet.classList.remove('fp-bas'); } })
     .observe(sheet.closest('.phone') || document.body, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
+<style id="apres">
+  .ap-3 { display: grid; gap: 10px; margin: 18px 0 6px; }
+  .ap-k { margin: 0 2px 2px; font: 800 22px/1.1 var(--serif); font-variation-settings: 'SOFT' 100, 'opsz' 144; color: #2B1A10; }
+  .ap-c { display: grid; grid-template-columns: 46px 1fr; gap: 12px; align-items: start; padding: 14px 14px 14px 12px; border-radius: 20px; background: #fff; box-shadow: 0 0 0 1px #EADFD2, 0 12px 22px -16px rgba(43,26,16,.45); }
+  .ap-c .ic { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: #F3E9DE; font: 24px/1 var(--emoji); }
+  .ap-c .ic span { filter: url(#emo-duo); }
+  .ap-c b { display: block; margin: 2px 0 4px; font: 800 18px/1.15 var(--serif); font-variation-settings: 'SOFT' 100, 'opsz' 144; color: #4E2E22; }
+  .ap-c p { margin: 0; font-size: 13.5px; line-height: 1.4; color: #4A3428; }
+  .ap-c ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+  .ap-c li { position: relative; padding-left: 14px; font-size: 13.5px; line-height: 1.35; color: #4A3428; }
+  .ap-c li::before { content: ''; position: absolute; left: 1px; top: .5em; width: 6px; height: 6px; border-radius: 50%; background: #8E5E45; }
+  .ap-plus { margin: 16px 0 6px; }
+  .ap-plus h3 { margin: 0 2px 10px; font: 800 18px/1.1 var(--serif); font-variation-settings: 'SOFT' 100, 'opsz' 144; color: #2B1A10; }
+  .ap-plus ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 7px; }
+  .ap-plus li { display: flex; align-items: center; gap: 6px; padding: 7px 11px 7px 8px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1px #EADFD2; font-size: 12.5px; font-weight: 600; color: #3A2418; }
+  .ap-plus li i { font: normal 15px/1 var(--emoji); filter: url(#emo-duo); }
+  .h2v .h2-sub b { white-space: nowrap; font-size: 12.5px; letter-spacing: -.01em; }
+  /* A · deux rubans qui défilent, en sens contraire */
+  .ap-plus--A { margin-left: -16px; margin-right: -16px; } .ap-plus--A h3 { margin-left: 18px; }
+  .ap-plus--A .rb { overflow: hidden; padding: 3px 0; -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .ap-plus--A .rb ul { flex-wrap: nowrap; width: max-content; gap: 8px; padding-right: 8px; animation: apRuban 22s linear infinite; }
+  .ap-plus--A .rb--2 ul { animation-direction: reverse; animation-duration: 20s; }
+  .ap-plus--A .rb li { white-space: nowrap; }
+  .ap-plus--A .rb + .rb { margin-top: 6px; }
+  @keyframes apRuban { to { transform: translateX(-50%); } }
+  /* B · des petites tuiles 3 × 3 qui « poppent » une par une, puis l'emoji fait un petit saut, chacun son tour */
+  .ap-plus--B ul { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .ap-plus--B li { flex-direction: column; justify-content: flex-start; gap: 7px; padding: 12px 6px 11px; border-radius: 18px; text-align: center; font-size: 11.5px; line-height: 1.2;
+    opacity: 0; transform: scale(.6); transition: opacity .3s calc(var(--k) * 90ms), transform .5s cubic-bezier(.3, 1.6, .5, 1) calc(var(--k) * 90ms); }
+  .ap-plus--B.is-vu li { opacity: 1; transform: none; }
+  .ap-plus--B .r { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: #F3E9DE; }
+  .ap-plus--B .r i { font-size: 21px; }
+  .ap-plus--B.is-vu .r i { display: inline-block; animation: apSaut 4.5s ease-in-out infinite; animation-delay: calc(1s + var(--k) * .5s); }
+  @keyframes apSaut { 0%, 12%, 100% { transform: none; } 4% { transform: translateY(-6px) rotate(-8deg); } 8% { transform: translateY(0) rotate(5deg); } }
+  /* B bien voyant : un grand bloc chocolat, les tuiles crème dedans, bordées d'or */
+  .ap-plus--B { position: relative; margin: 20px 0 8px; padding: 18px 12px 14px; border-radius: 26px; background: linear-gradient(160deg, #5A3626, #3A2015); box-shadow: 0 0 0 1.5px #D9B68A, 0 18px 30px -16px rgba(33,2,2,.7); overflow: hidden; }
+  .ap-plus--B::before { content: ''; position: absolute; top: -60px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(232,201,160,.28), transparent 70%); pointer-events: none; }
+  .ap-plus--B h3 { margin: 0 0 2px; text-align: center; color: #F6E7D2; font-size: 23px; }
+  .ap-plus--B .ap-plus-s { margin: 0 0 14px; text-align: center; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #E8C9A0; }
+  .ap-plus--B li { background: #FDF8F4 !important; box-shadow: 0 0 0 1.5px #E8C9A0, 0 8px 14px -10px rgba(0,0,0,.6) !important; color: #3A2418 !important; font-weight: 700 !important; }
+  .ap-plus--B .r { background: #F3E2CC; box-shadow: inset 0 0 0 1.5px #E8C9A0; }
+  .ap-plus--B .r i { font-size: 23px; filter: none; width: 30px; height: 30px; } .ap-plus--B .r i svg { display: block; width: 30px; height: 30px; }
+  .ap-c .ic svg { width: 32px; height: 32px; }
+  .offrir .emo-t.ap-ico { filter: none; display: inline-block; width: 22px; height: 22px; vertical-align: -5px; margin-right: 4px; } .offrir .emo-t.ap-ico svg { width: 22px; height: 22px; display: block; }
+  @media (prefers-reduced-motion: reduce) { .ap-plus--A .rb ul, .ap-plus--B .r i { animation: none !important; } .ap-plus--B li { opacity: 1; transform: none; } }
+  .ap-jour { margin: 4px 0 0; font-size: 12px; color: #8E6A55; }
+  .ap-rassure { margin: 6px 0 0; text-align: center; font-size: 11.5px; color: #8E6A55; }
+  .sheet .body ul.perks, .sheet .body .fp-h, .sheet .body .extra-title { display: none !important; }
+</style>
+<script>
+/* 31/10/2026 : fiche réécrite avec Marie, « comme pour une cliente » : 4 grands blocs (French, Ta chance chaque mois, Tu passes avant tout le monde, Zéro stress),
+   puis « Et en plus… » en 9 tuiles dans un bloc chocolat (choix B), icônes dessinées une par une (blanc-beige + marron), bouton « Je prends ma place ».
+   La liste d'origine des avantages reste dans la page (cachée), pour pouvoir revenir en arrière. */
+(function () {
+  var body = document.querySelector('.sheet .body'), foot = document.querySelector('.sheet-foot'); if (!body) return;
+  var TROIS = [
+    ['💅', 'Ta French, toujours offerte', ['Blanche ou de couleur, à chaque pose', 'Les tout petits nail arts aussi']],
+    ['🎡', 'Ta chance chaque mois', ['Un tour de roue offert tous les mois : −1 €, −5 €, −10 €… et peut-être la pose gratuite', 'Tes gains vont dans ta cagnotte, pour tes prochaines poses']],
+    ['🗓️', 'Tu passes avant tout le monde', ['Tu réserves avant tout le monde à l’ouverture du planning', 'Tu es prévenue la première quand une place se libère', 'Ta ligne privée avec moi sur WhatsApp']],
+    ['🛟', 'Zéro stress', ['Un ongle cassé ? Réparé gratuitement jusqu’à 10 jours après ta pose', 'Un imprévu ? Ton joker pour annuler au dernier moment, une fois par an', 'Tu dois tout enlever sans refaire de pose (une opération, par exemple) ? Ta dépose est offerte dès ton 2e mois']]
+  ];
+  var T_BAS = 'En supplément de ta pose.';
+  var PLUS = [['🪄', 'Essaie ta prochaine pose'], ['💎', 'Le nuancier privé'], ['🦶', 'Le massage des pieds'], ['🧴', 'Ton huile offerte'],
+    ['🎂', '−5 € à ton anniversaire'], ['💌', '−20 % si tu parraines'], ['💡', 'Le conseil de la semaine'], ['🔮', 'L’horoscope des ongles'], ['🐾', 'Les câlins de Louise']];
+  var ICO = {"💅": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><g stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\" fill=\"#FBF3E8\"><rect x=\"2.6\" y=\"14.5\" width=\"4.4\" height=\"10.5\" rx=\"2.2\" transform=\"rotate(-38 4.8 19.7)\"/><rect x=\"8.2\" y=\"7.2\" width=\"4.4\" height=\"13\" rx=\"2.2\"/><rect x=\"12.7\" y=\"4.6\" width=\"4.4\" height=\"15\" rx=\"2.2\"/><rect x=\"17.2\" y=\"5.4\" width=\"4.4\" height=\"14\" rx=\"2.2\"/><rect x=\"21.6\" y=\"8.6\" width=\"4.2\" height=\"11\" rx=\"2.1\"/><rect x=\"7.6\" y=\"14.5\" width=\"18.4\" height=\"14\" rx=\"6.5\"/></g><g fill=\"#6B3418\"><rect x=\"8.9\" y=\"7.9\" width=\"3\" height=\"4\" rx=\"1.5\"/><rect x=\"13.4\" y=\"5.3\" width=\"3\" height=\"4\" rx=\"1.5\"/><rect x=\"17.9\" y=\"6.1\" width=\"3\" height=\"4\" rx=\"1.5\"/><rect x=\"22.2\" y=\"9.3\" width=\"3\" height=\"3.8\" rx=\"1.5\"/></g><path d=\"M27.5 1.9Q28.332 3.668 30.1 4.5Q28.332 5.332 27.5 7.1Q26.668 5.332 24.9 4.5Q26.668 3.668 27.5 1.9Z\" fill=\"#D9A86C\"/></svg>", "🎡": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><path d=\"M16 17.5L16.00 6.00A11.5 11.5 0 0 1 24.13 9.37Z\" fill=\"#FBF3E8\"/><path d=\"M16 17.5L24.13 9.37A11.5 11.5 0 0 1 27.50 17.50Z\" fill=\"#6B3418\"/><path d=\"M16 17.5L27.50 17.50A11.5 11.5 0 0 1 24.13 25.63Z\" fill=\"#FBF3E8\"/><path d=\"M16 17.5L24.13 25.63A11.5 11.5 0 0 1 16.00 29.00Z\" fill=\"#6B3418\"/><path d=\"M16 17.5L16.00 29.00A11.5 11.5 0 0 1 7.87 25.63Z\" fill=\"#FBF3E8\"/><path d=\"M16 17.5L7.87 25.63A11.5 11.5 0 0 1 4.50 17.50Z\" fill=\"#6B3418\"/><path d=\"M16 17.5L4.50 17.50A11.5 11.5 0 0 1 7.87 9.37Z\" fill=\"#FBF3E8\"/><path d=\"M16 17.5L7.87 9.37A11.5 11.5 0 0 1 16.00 6.00Z\" fill=\"#6B3418\"/><circle cx=\"16\" cy=\"17.5\" r=\"11.5\" fill=\"none\" stroke=\"#4E2E22\" stroke-width=\"1.4\"/><circle cx=\"16\" cy=\"17.5\" r=\"2.4\" fill=\"#E8D2B5\" stroke=\"#4E2E22\" stroke-width=\"1\"/><path d=\"M13.4 3.2h5.2L16 8.2z\" fill=\"#D9A86C\" stroke=\"#4E2E22\" stroke-width=\"1\" stroke-linejoin=\"round\"/></svg>", "🗓️": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect x=\"4.5\" y=\"7\" width=\"23\" height=\"21.5\" rx=\"4\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M4.5 11a4 4 0 0 1 4-4h15a4 4 0 0 1 4 4v3h-23z\" fill=\"#6B3418\"/><rect x=\"9.6\" y=\"3.8\" width=\"2.8\" height=\"6.4\" rx=\"1.4\" fill=\"#C9A27E\"/><rect x=\"19.6\" y=\"3.8\" width=\"2.8\" height=\"6.4\" rx=\"1.4\" fill=\"#C9A27E\"/><g fill=\"#E8D2B5\"><circle cx=\"10\" cy=\"18.5\" r=\"1.6\"/><circle cx=\"16\" cy=\"18.5\" r=\"1.6\"/><circle cx=\"22\" cy=\"18.5\" r=\"1.6\"/><circle cx=\"10\" cy=\"23.5\" r=\"1.6\"/><circle cx=\"16\" cy=\"23.5\" r=\"1.6\"/></g><path transform=\"translate(22 23.5) scale(0.62)\" d=\"M0 3.2C-2.6 1.4-4 0-4-1.6A2 2 0 0 1 0-2.4 2 2 0 0 1 4-1.6C4 0 2.6 1.4 0 3.2Z\" fill=\"#6B3418\"/></svg>", "🛟": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><circle cx=\"16\" cy=\"16\" r=\"8.4\" fill=\"none\" stroke=\"#FBF3E8\" stroke-width=\"6\"/><circle cx=\"16\" cy=\"16\" r=\"8.4\" fill=\"none\" stroke=\"#6B3418\" stroke-width=\"6\" stroke-dasharray=\"5.6 7.6\" transform=\"rotate(-24 16 16)\"/><circle cx=\"16\" cy=\"16\" r=\"11.4\" fill=\"none\" stroke=\"#C9A27E\" stroke-width=\"1.2\"/><circle cx=\"16\" cy=\"16\" r=\"5.4\" fill=\"none\" stroke=\"#C9A27E\" stroke-width=\"1.2\"/></svg>", "🪄": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><path d=\"M6 26.5 19.5 13\" stroke=\"#4E2E22\" stroke-width=\"3.6\" stroke-linecap=\"round\"/><path d=\"M18.4 14.1 21.2 11.3\" stroke=\"#FBF3E8\" stroke-width=\"3.6\" stroke-linecap=\"round\"/><path d=\"M24.5 3.3Q25.844 6.156 28.7 7.5Q25.844 8.844 24.5 11.7Q23.156 8.844 20.3 7.5Q23.156 6.156 24.5 3.3Z\" fill=\"#D9A86C\"/><path d=\"M12 4.1Q12.768 5.732 14.4 6.5Q12.768 7.268 12 8.9Q11.232 7.268 9.6 6.5Q11.232 5.732 12 4.1Z\" fill=\"#C9A27E\"/><path d=\"M26.5 16.3Q27.204 17.796 28.7 18.5Q27.204 19.204 26.5 20.7Q25.796 19.204 24.3 18.5Q25.796 17.796 26.5 16.3Z\" fill=\"#C9A27E\"/></svg>", "💎": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><path d=\"M8 12.2 12.3 6.5h7.4L24 12.2 16 26.5z\" fill=\"#FBF3E8\"/><path d=\"M8 12.2h16L16 26.5z\" fill=\"#E8D2B5\"/><path d=\"M12.6 12.2h6.8L16 26.5z\" fill=\"#FBF3E8\"/><path d=\"M19.4 12.2H24L16 26.5z\" fill=\"#C9A27E\"/><path d=\"M8 12.2 12.3 6.5h7.4L24 12.2 16 26.5z\" fill=\"none\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M8 12.2h16M12.6 12.2 16 6.5l3.4 5.7\" fill=\"none\" stroke=\"#C9A27E\" stroke-width=\"1\"/></svg>", "🦶": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><path d=\"M10 3.5h5.6c-.1 4.6.1 8.8 1.4 11.8 1.3 2.9 4.4 4.2 7.9 5.8 2.6 1.2 4 2.8 4 4.6 0 1.6-1.1 2.8-2.8 2.8h-6.7c-1.5 0-2.4-.9-4-.9s-2.8 1.1-5 1.1c-2.5 0-3.8-1.7-3.8-4.1 0-2.2 1.4-3.6 2-6 .7-3 1-9.6 1.4-15.1z\" fill=\"#F4E3CD\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M24.7 21.2c.5.9.5 1.9 0 2.8M26.9 22.3c.4.8.4 1.7 0 2.4\" fill=\"none\" stroke=\"#C9A27E\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><ellipse cx=\"27.9\" cy=\"24.3\" rx=\"1.15\" ry=\".85\" fill=\"#6B3418\"/><path d=\"M19.5 9.5q1.25-1.4 2.5 0t2.5 0 2.5 0M20.5 13.5q1.25-1.4 2.5 0t2.5 0 2.5 0\" fill=\"none\" stroke=\"#6B3418\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg>", "🧴": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect x=\"13\" y=\"8\" width=\"6\" height=\"5\" fill=\"#E8D2B5\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><rect x=\"12.2\" y=\"3.2\" width=\"7.6\" height=\"5.6\" rx=\"2.6\" fill=\"#6B3418\"/><rect x=\"9.5\" y=\"12\" width=\"13\" height=\"16.5\" rx=\"4.5\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M16 16.2c-1.8 2.3-2.7 3.7-2.7 4.9a2.7 2.7 0 0 0 5.4 0c0-1.2-.9-2.6-2.7-4.9z\" fill=\"#6B3418\"/></svg>", "🎂": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect x=\"5.5\" y=\"15.5\" width=\"21\" height=\"12.5\" rx=\"3.5\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M5.5 19a3.5 3.5 0 0 1 3.5-3.5h14a3.5 3.5 0 0 1 3.5 3.5v1.2c-1.4 0-1.4 1.6-2.8 1.6s-1.4-2.4-2.8-2.4-1.4 3-2.8 3-1.4-2.6-2.8-2.6-1.4 2.2-2.8 2.2-1.4-3-2.8-3-1.4 1.8-2.2 1.8z\" fill=\"#6B3418\"/><path d=\"M6 24.5h20\" stroke=\"#E8D2B5\" stroke-width=\"1.4\"/><rect x=\"14.8\" y=\"8.6\" width=\"2.4\" height=\"7.4\" rx=\"1\" fill=\"#E8D2B5\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M16 3.4c-1.3 1.7-1.9 2.8-1.9 3.6a1.9 1.9 0 0 0 3.8 0c0-.8-.6-1.9-1.9-3.6z\" fill=\"#D9A86C\"/></svg>", "💌": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"7.5\" width=\"25\" height=\"17.5\" rx=\"3\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M4.5 9 16 17.6 27.5 9\" fill=\"none\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path transform=\"translate(16 20.2) scale(1.05)\" d=\"M0 3.2C-2.6 1.4-4 0-4-1.6A2 2 0 0 1 0-2.4 2 2 0 0 1 4-1.6C4 0 2.6 1.4 0 3.2Z\" fill=\"#6B3418\"/></svg>", "💡": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><path d=\"M16 3.6a8.6 8.6 0 0 0-5 15.6c.9.7 1.4 1.5 1.4 2.6h7.2c0-1.1.5-1.9 1.4-2.6A8.6 8.6 0 0 0 16 3.6z\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M13.6 17.6 16 12.6l2.4 5\" fill=\"none\" stroke=\"#C9A27E\" stroke-width=\"1.2\" stroke-linejoin=\"round\"/><rect x=\"12.2\" y=\"22.2\" width=\"7.6\" height=\"2.7\" rx=\"1.2\" fill=\"#6B3418\"/><rect x=\"12.8\" y=\"25.6\" width=\"6.4\" height=\"2.6\" rx=\"1.2\" fill=\"#6B3418\"/><path d=\"M11.4 9.2a5 5 0 0 1 3.2-3\" stroke=\"#fff\" stroke-width=\"1.4\" stroke-linecap=\"round\" fill=\"none\"/></svg>", "🔮": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><circle cx=\"16\" cy=\"14\" r=\"10\" fill=\"#6B3418\"/><path d=\"M10.4 11a6.4 6.4 0 0 1 4.2-4.4\" stroke=\"#E8D2B5\" stroke-width=\"1.6\" stroke-linecap=\"round\" fill=\"none\" opacity=\".8\"/><path d=\"M19.5 12.3Q20.524 14.475999999999999 22.7 15.5Q20.524 16.524 19.5 18.7Q18.476 16.524 16.3 15.5Q18.476 14.475999999999999 19.5 12.3Z\" fill=\"#FBF3E8\"/><path d=\"M13 16.4Q13.512 17.488 14.6 18Q13.512 18.512 13 19.6Q12.488 18.512 11.4 18Q12.488 17.488 13 16.4Z\" fill=\"#E8D2B5\"/><path d=\"M8.5 25.4Q16 21.8 23.5 25.4L25 28.6H7z\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/></svg>", "🐾": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><g fill=\"#6B3418\"><ellipse cx=\"10.4\" cy=\"21\" rx=\"4\" ry=\"3.4\"/><ellipse cx=\"6.2\" cy=\"15.6\" rx=\"1.5\" ry=\"2\"/><ellipse cx=\"9\" cy=\"13.4\" rx=\"1.5\" ry=\"2\"/><ellipse cx=\"12.2\" cy=\"13.6\" rx=\"1.5\" ry=\"2\"/><ellipse cx=\"14.6\" cy=\"16.2\" rx=\"1.4\" ry=\"1.9\"/><ellipse cx=\"21.6\" cy=\"12.2\" rx=\"3.6\" ry=\"3.1\"/><ellipse cx=\"17.9\" cy=\"7.4\" rx=\"1.35\" ry=\"1.8\"/><ellipse cx=\"20.4\" cy=\"5.5\" rx=\"1.35\" ry=\"1.8\"/><ellipse cx=\"23.3\" cy=\"5.6\" rx=\"1.35\" ry=\"1.8\"/><ellipse cx=\"25.5\" cy=\"8\" rx=\"1.3\" ry=\"1.7\"/></g></svg>", "🎁": "<svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect x=\"5\" y=\"14\" width=\"22\" height=\"14.5\" rx=\"2.5\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><rect x=\"3.8\" y=\"10\" width=\"24.4\" height=\"5.6\" rx=\"2\" fill=\"#FBF3E8\" stroke=\"#C9A27E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><rect x=\"14\" y=\"10\" width=\"4\" height=\"18.5\" fill=\"#6B3418\"/><path d=\"M16 10c-1.5-3.4-6.4-5.2-7.4-2.6-.8 2.2 3.4 2.9 7.4 2.6zM16 10c1.5-3.4 6.4-5.2 7.4-2.6.8 2.2-3.4 2.9-7.4 2.6z\" fill=\"#6B3418\"/></svg>"};
+  var PV = (/[?&]plus=([AB])/.exec(location.search) || [0, 'B'])[1];   // choix de Marie : B
+  function pill(x) { return '<li><i>' + x[0] + '</i>' + x[1] + '</li>'; }
+  function plusHTML() {
+    if (PV === 'B') return '<ul>' + PLUS.map(function (x, k) { return '<li style="--k:' + k + '"><span class="r"><i>' + (ICO[x[0]] || x[0]) + '</i></span>' + x[1] + '</li>'; }).join('') + '</ul>';
+    var a = PLUS.slice(0, 5).map(pill).join(''), b = PLUS.slice(5).map(pill).join('');
+    return '<div class="rb"><ul>' + a + a + '</ul></div><div class="rb rb--2"><ul>' + b + b + '</ul></div>';
+  }
+  function apres() {
+    var sub = body.querySelector('.h2-sub');
+    if (sub && !sub.dataset.ap) {
+      sub.dataset.ap = '1'; sub.innerHTML = '<b>Pour être encore plus chouchoutée, toute l’année.</b>';
+    }
+    if (!body.querySelector('.ap-3')) {
+      var ul = body.querySelector('ul.perks'); if (!ul) return;
+      var d = document.createElement('div'); d.className = 'ap-3';
+      d.innerHTML = '<p class="ap-k">Pourquoi tu vas l’adorer</p>' + TROIS.map(function (t) {
+        return '<div class="ap-c"><span class="ic">' + (ICO[t[0]] || '<span>' + t[0] + '</span>') + '</span><div><b>' + t[1] + '</b><ul>' + t[2].map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div></div>';
+      }).join('');
+      var p = document.createElement('div'); p.className = 'ap-plus';
+      p.innerHTML = (PV === 'B' ? '<h3>Et en plus…</h3><p class="ap-plus-s">' + PLUS.length + ' petits bonus rien que pour toi</p>' : '<h3>Et en plus…</h3>') + plusHTML(); p.className += ' ap-plus--' + PV;
+      ul.parentNode.insertBefore(d, ul); ul.parentNode.insertBefore(p, ul);
+      body.querySelectorAll('ul.perks').forEach(function (u) { var c = u.closest('.extra, section'); });
+      var st = body.querySelector('.extra-title'); if (st && st.nextElementSibling) st.nextElementSibling.style.display = 'none';
+    }
+    var tm = body.querySelector('.fp-terms'); if (tm && tm.textContent !== T_BAS) tm.textContent = T_BAS;
+    document.querySelectorAll('.offrir .emo-t:not(.ap-ico)').forEach(function (e) { e.classList.add('ap-ico'); e.innerHTML = ICO['🎁']; });
+    var cta = foot && foot.querySelector('.cta');
+    if (cta && cta.textContent.indexOf('Je prends') < 0) cta.textContent = 'Je prends ma place · 16,99 €/mois';
+    if (cta && !foot.querySelector('.ap-rassure')) { var r = document.createElement('p'); r.className = 'ap-rassure'; r.textContent = 'Sans engagement : tu arrêtes quand tu veux, sans te justifier.'; cta.insertAdjacentElement('afterend', r); }
+  }
+  apres(); setTimeout(apres, 300); setTimeout(apres, 1500); addEventListener('load', apres);
+  setInterval(function () {
+    var pl = body.querySelector('.ap-plus--B:not(.is-vu)'); if (!pl) return;
+    var r = pl.getBoundingClientRect(); if (r.top < innerHeight * .85) pl.classList.add('is-vu');
+  }, 200);
+  if (/[?&]voir=plus/.test(location.search)) setTimeout(function () { var pl = body.querySelector('.ap-plus'); if (pl) body.scrollTo({ top: pl.offsetTop - 140, behavior: 'smooth' }); }, 1200);
+  new MutationObserver(function () { apres(); }).observe(body, { childList: true });
+  if (foot) new MutationObserver(function () { var c = foot.querySelector('.cta'); if (c && c.textContent.indexOf('Je prends') < 0) apres(); }).observe(foot, { childList: true, subtree: true, characterData: true });
 })();
 </script>
 <script>/* la fiche est prête (déjà ouverte, plein écran) : on la montre d'un coup */
