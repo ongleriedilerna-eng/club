@@ -355,7 +355,7 @@
     var d = [];
     d.push('<div class="fiche-h"><span class="av">' + esc(c.prenom.charAt(0) || '?') + '</span><span><b>' + nom(c) + '</b><small>Membre depuis ' + moisAn(c.debut) + ' · ' + etat + '</small><small>' + esc(c.email) + (c.marraine ? ' · venue grâce à ' + esc(c.marraine) : '') + '</small></span></div>');
     d.push('<p class="sous" style="margin-top:0">Ses réductions</p>');
-    d.push('<div class="d"><span>💅 French offerte<small>À chaque French</small></span><span class="t ok">Toujours</span></div>');
+    d.push('<div class="d"><span>💅 French et mini nail arts offerts<small>À chaque fois</small></span><span class="t ok">Toujours</span></div>');
     d.push('<div class="d"><span>💰 Cagnotte : <b>' + euros(c.cagnotte) + '</b><small>Par tranches de 5 €</small></span>' + (c.cagnotte >= 500 ? '<button data-act="cag">-5 € utilisés</button>' : '<span class="t">pas assez</span>') + '</div>');
     aFaire(c).forEach(function (f, k) {
       if (f.type === 'anniversaire') d.push('<div class="d"><span>🎂 Anniversaire<small>-5 € ce mois-ci</small></span><button data-act="anniv" data-k="' + k + '">-5 € appliqués</button></div>');

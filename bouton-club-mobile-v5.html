@@ -2045,6 +2045,15 @@
   @keyframes fpOffertEtoile { 0%, 100% { opacity: .25; transform: scale(.6) rotate(0); } 50% { opacity: 1; transform: scale(1.2) rotate(30deg); } }
   @media (max-width: 340px) { .fp-offert { margin-left: 5px; padding: 4px 6px 3px; font-size: 8px; } }
   @media (prefers-reduced-motion: reduce) { .fp-offert, .fp-t i { animation: none; } }
+  /* 30/10/2026 : « OFFERT » plus visible (Marie) : plus grand, doré, un halo qui pulse autour et un reflet qui passe dessus */
+  .fp-offert { overflow: visible; padding: 6px 10px 5px !important; margin-top: -13px !important; font-size: 10.5px !important;
+    background: linear-gradient(135deg, #6B3418, #4E2E22 60%, #8E5E45) !important; box-shadow: 0 0 0 1.5px #E8C9A0, 0 6px 14px -6px rgba(33,2,2,.8) !important; }
+  .fp-offert::before { content: ''; position: absolute; inset: -2px; border-radius: inherit; border: 2px solid #D9A86C; opacity: 0; pointer-events: none; animation: fpOffertHalo 1.8s ease-out infinite; } /* fp-offert-halo */
+  .fp-offert::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden;
+    background: linear-gradient(110deg, transparent 30%, rgba(255,240,215,.75) 48%, transparent 66%) -150% 0 / 220% 100% no-repeat; animation: fpOffertReflet 2.6s ease-in-out infinite; }
+  @keyframes fpOffertHalo { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(1.45, 1.8); opacity: 0; } }
+  @keyframes fpOffertReflet { 0%, 40% { background-position: -150% 0; } 75%, 100% { background-position: 150% 0; } }
+  @media (prefers-reduced-motion: reduce) { .fp-offert::before, .fp-offert::after { animation: none; } }
   .sheet .body { padding-top: 78px !important; padding-bottom: 24px !important; }
 
   /* en bas : seulement le bouton pour rejoindre, qui grossit quand on descend */
@@ -2338,7 +2347,7 @@
         <ul class="tz-av">
           <li><i>🎡</i>La roue chaque mois et ta cagnotte</li>
           <li><i>🎮</i>Les jeux, le quiz et le classement des baddies</li>
-          <li><i>💅</i>La French toujours offerte</li>
+          <li><i>💅</i>La French et les tout petits nail arts toujours offerts</li>
           <li><i>💡</i>Ton conseil de pro chaque semaine</li>
         </ul>
         <button type="button" class="cta light" data-tz-join>Je rejoins le club · 16,99 €/mois</button>
@@ -2719,7 +2728,7 @@
     if (!window.CLUB_REEL) try { if (!sessionStorage.getItem('dilerna-cliente-neuve')) { Object.keys(localStorage).filter(function (k) { return k.indexOf('dilerna-') === 0; }).forEach(function (k) { localStorage.removeItem(k); }); sessionStorage.setItem('dilerna-cliente-neuve', '1'); } } catch (e) {}
   }
   function lireMembre() { try { return JSON.parse(localStorage.getItem('dilerna-membre') || 'null'); } catch (e) { return null; } }
-  var CLUB = [['💅','French toujours offerte'],['👐','Massage des mains'],['💔','Réparation 7 jours'],['🎂','-5 € anniversaire'],['🩹','1 dépose offerte par an'],
+  var CLUB = [['💅','French et mini nail arts offerts'],['👐','Massage des mains'],['💔','Réparation 7 jours'],['🎂','-5 € anniversaire'],['🩹','1 dépose offerte par an'],
     ['💌','Parrainage'],['🐾','Câlins de Louise']];
   var PLUS = [['🔔','Prévenu(e) en premier'],['🗓️','Planning avant tout le monde'],['🃏','1 joker par an'],['🛟','Réparation 10 jours'],['🩹','Toutes les déposes offertes']];
   var MILKY_CH = [['🎡','La roue du mois'],['🪄','Essayage magique'],['💎','Nuancier privé'],['🦶','Massage des pieds'],['💬','Messages prioritaires'],['🚑','Réparation en priorité'],['💌','Parrainage boosté']];
@@ -2730,7 +2739,7 @@
     { tab: 'Club Dilerna', crown: true, name: 'Club Dilerna', price: '16,99', places: '1re vague · 5 places uniquement',
       sub: 'Le club dans le club.',
       perks: [
-        ['💅','La French TOUJOURS offerte',' : blanche ou de couleur, à chaque fois que tu prends une French, elle est offerte'],
+        ['💅','La French et les tout petits nail arts TOUJOURS offerts',' : la French, blanche ou de couleur, à chaque fois que tu en prends une. Et les tout petits nail arts aussi !'],
         ['🎡','La roue du club',' : un tour offert chaque mois. -1 €, -5 €, -10 €… et qui sait, peut-être la pose gratuite ! Tes gains vont dans ta cagnotte, à utiliser sur tes poses dans l’année'],
         ['🪄','Ton essayage magique'," : tu prends ta main en photo et tu essaies une autre forme ou une autre longueur, carré, coffin, amande…"],
         ['🗓️','Prioritaire quand j’ouvre le nouveau planning',' et les nouveaux créneaux : tu réserves avant tout le monde'],
@@ -2762,8 +2771,8 @@
     return vagueTexte(+((/[?&]membres=(\d+)/.exec(location.search) || [])[1] || (function () { try { return localStorage.getItem('dilerna-club-membres'); } catch (e) { return 0; } })() || 0));
   } });
   var REGLES_LI =     '<li>Sans engagement : tu te désabonnes quand tu veux, en un clic depuis ton espace. Ton abonnement s’arrête à la fin du mois déjà payé, sans autre prélèvement.</li>' +
-    '<li>Tes avantages (French offerte, déposes, roue, cagnotte…) sont valables seulement tant que tu es abonné(e).</li>' +
-    '<li>La French est TOUJOURS offerte : French classique, blanche ou de couleur, sans déco.</li>' +
+    '<li>Tes avantages (French et tout petits nail arts offerts, déposes, roue, cagnotte…) sont valables seulement tant que tu es abonné(e).</li>' +
+    '<li>La French est TOUJOURS offerte : French classique, blanche ou de couleur. Les tout petits nail arts sont offerts aussi.</li>' +
     '<li>Réparation offerte si l’ongle casse ou se décolle tout seul, pas en cas de choc. Je te prends selon mes disponibilités.</li>' +
     '<li>Joker : pour annuler moins de 24 h avant. Il ne se reporte pas d’une année sur l’autre.</li>' +
     '<li>Roue du club : 1 tour offert par mois. Tes gains s’ajoutent à ta cagnotte et s’utilisent sur tes poses par tranches de 5 €. La cagnotte repart à zéro chaque année, à la date anniversaire de ton abonnement. Jamais remboursée en argent. Chaque année, une pose offerte est en jeu : un(e) seul(e) gagnant(e), tirée au sort parmi les membres, la découvre en tournant la roue.</li>' +
@@ -2804,7 +2813,7 @@
   var SW = ['milky'];
   var CROWN_MINI = '<svg class="crown-mini" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 18 2.5 8l5 4.2L12 5l4.5 7.2 5-4.2-1 10z"/></svg>';
   function own(k) {
-    if (k === 0) return F[0].perks.map(function (p) { return p[1] === 'La French TOUJOURS offerte' ? [p[0], p[1], ' : blanche ou de couleur, à chaque fois que tu prends une French, elle est offerte. Elle vaut 10 €'] : p; }).concat(F[0].extra);
+    if (k === 0) return F[0].perks.map(function (p) { return p[1] === 'La French et les tout petits nail arts TOUJOURS offerts' ? [p[0], p[1], ' : la French, blanche ou de couleur, à chaque fois que tu en prends une (elle vaut 10 €). Et les tout petits nail arts aussi !'] : p; }).concat(F[0].extra);
     return F[k].extra;
   }
   function incLine(f) {
@@ -2961,7 +2970,7 @@
       html += incDetail(f);
     }
     if (f.perks && after) {
-      var list = f.perks.map(function (p) { return p[1] === 'La French TOUJOURS offerte' ? [p[0], p[1], ' : blanche ou de couleur, à chaque fois que tu prends une French, elle est offerte. Elle vaut 10 €'] : p; });
+      var list = f.perks.map(function (p) { return p[1] === 'La French et les tout petits nail arts TOUJOURS offerts' ? [p[0], p[1], ' : la French, blanche ou de couleur, à chaque fois que tu en prends une (elle vaut 10 €). Et les tout petits nail arts aussi !'] : p; });
       html += perks(list);
     } else if (f.perks) html += perks(f.perks);
     html += '<p class="extra-title">' + esc(f.extraTitle) + '</p>' + perks(f.extra) + REGLES;
@@ -5098,7 +5107,7 @@
     var fs = 12; t.style.fontSize = fs + 'px';
     while (t.scrollWidth > t.clientWidth + 1 && fs > 9.5) { fs -= .25; t.style.fontSize = fs + 'px'; }
   }
-  cadeaux(document.body); addEventListener('resize', uneLigne);
+  cadeaux(document.body); addEventListener('resize', uneLigne); addEventListener('load', uneLigne); if (document.fonts && document.fonts.ready) document.fonts.ready.then(uneLigne);  /* la police arrive après : on réajuste */
   (function () {
     var jeux = document.querySelector('.space .bubble.jeux-big'), src = document.querySelector('.onb-louise svg');
     if (!jeux || !src || jeux.querySelector('.jx-lou')) return;
