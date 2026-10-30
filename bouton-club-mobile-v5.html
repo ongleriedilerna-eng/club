@@ -2738,7 +2738,7 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
   var CLUB = [['💅','French et mini nail arts offerts'],['👐','Massage des mains'],['💔','Réparation 7 jours'],['🎂','-5 € anniversaire'],['🩹','1 dépose offerte par an'],
     ['💌','Parrainage'],['🐾','Câlins de Louise']];
   var PLUS = [['🔔','Prévenu(e) en premier'],['🗓️','Planning avant tout le monde'],['🃏','1 joker par an'],['🛟','Réparation 10 jours'],['🩹','Toutes les déposes offertes']];
-  var MILKY_CH = [['🎡','La roue du mois'],['🪄','Essayage magique'],['💎','Nuancier privé'],['🦶','Massage des pieds'],['💬','Messages prioritaires'],['🚑','Réparation en priorité'],['💌','Parrainage boosté']];
+  var MILKY_CH = [['🎡','La roue du mois'],['🪄','Essaie ta prochaine pose'],['💎','Nuancier privé'],['🦶','Massage des pieds'],['💬','Messages prioritaires'],['🚑','Réparation en priorité'],['💌','Parrainage boosté']];
   /* Nude et Milky ont toutes les déposes ; le Milky a le parrainage boosté */
   var CLUB_SANS_DEPOSE = CLUB.filter(function (c) { return c[1] !== '1 dépose offerte par an'; });
   var CLUB_MILKY = CLUB_SANS_DEPOSE.filter(function (c) { return c[1] !== 'Parrainage'; });
@@ -2748,7 +2748,7 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
       perks: [
         ['💅','La French et les tout petits nail arts TOUJOURS offerts',' : la French, blanche ou de couleur, à chaque fois que tu en prends une. Et les tout petits nail arts aussi !'],
         ['🎡','La roue du club',' : un tour offert chaque mois. -1 €, -5 €, -10 €… et qui sait, peut-être la pose gratuite ! Tes gains vont dans ta cagnotte, à utiliser sur tes poses dans l’année'],
-        ['🪄','Ton essayage magique'," : tu prends ta main en photo et tu essaies une autre forme ou une autre longueur, carré, coffin, amande…"],
+        ['🪄','Essaie ta prochaine pose'," : prends ta main en photo et vois-la tout de suite avec une autre forme ou une autre longueur (carré, coffin, amande…), avant même de venir"],
         ['🗓️','Prioritaire quand j’ouvre le nouveau planning',' et les nouveaux créneaux : tu réserves avant tout le monde'],
         ['🔔','Prévenu(e) en premier',' quand une place se libère'],
         ['🩹','Toutes tes déposes seules offertes',' dès ton 2e mois d’abonnement : quand tu enlèves tes ongles sans refaire de pose'],
@@ -2787,7 +2787,7 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
     '<li>Paiement automatique chaque mois (carte ou Apple Pay), même si tu ne viens pas ce mois-là.</li>' +
     '<li>Tu t’abonnes en ligne ? Tu as 14 jours pour changer d’avis, sans frais.</li>' +
     '<li>WhatsApp prioritaire : je réponds de 9 h à 18 h, du lundi au vendredi.</li>' +
-    '<li>Tes photos de mains (essayage magique) servent uniquement à l’essayage. Elles sont supprimées si tu te désabonnes.</li>' +
+    '<li>Tes photos de mains (« Essaie ta prochaine pose ») servent uniquement à l’essayage. Elles sont supprimées si tu te désabonnes.</li>' +
     '<li>Déposes seules offertes à partir de ton 2e mois d’abonnement, une par mois maximum.</li>' +
     '<li>Huile à cuticules : un mini flacon offert à ta première pose en tant que membre.</li>';
   var REGLES = '<details class="regles"><summary>Les règles du club <span>Voir</span></summary><ul>' + REGLES_LI + '</ul></details>';
@@ -5077,7 +5077,7 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
   var name = document.createElement('p'); name.className = 'fp-name'; top.appendChild(name);
   // « Club Dilerna » reste centré ; le petit « OFFERT » qui bouge se colle juste à droite et ouvre l'essai photo offert
   var nom = document.createElement('span'); nom.className = 'fp-nom'; nom.textContent = 'Club Dilerna'; name.appendChild(nom);
-  var offert = document.createElement('button'); offert.type = 'button'; offert.className = 'fp-offert'; offert.setAttribute('aria-label', 'Essayage magique offert');
+  var offert = document.createElement('button'); offert.type = 'button'; offert.className = 'fp-offert'; offert.setAttribute('aria-label', 'Essai offert : essaie ta prochaine pose');
   offert.innerHTML = 'OFFER<span class="fp-t">T<i aria-hidden="true">✦</i><i aria-hidden="true">✦</i></span>';
   offert.addEventListener('click', function () { if (window.dilernaEssai) window.dilernaEssai(); });
   nom.appendChild(offert);
