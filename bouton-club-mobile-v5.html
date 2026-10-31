@@ -1534,6 +1534,16 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
   html.real-phone .phone { width: 100%; height: 100vh; height: 100dvh; }
   html.real-phone .fit { height: 100vh; height: 100dvh; }
   html.real-phone input, html.real-phone textarea, html.real-phone select { font-size: 16px; }
+  /* Club sur ordinateur (31/10/2026) : une colonne pleine hauteur au milieu, sans cadre de téléphone */
+  html.ordi, html.ordi body { overflow: hidden; width: 100%; height: 100%; }
+  html.ordi body { background: radial-gradient(circle at 18% 22%, #F2E3D3 0, transparent 34%), radial-gradient(circle at 84% 78%, #EFE2D4 0, transparent 36%), #F8F4EC; }
+  html.ordi .wrap { padding: 0; gap: 0; }
+  html.ordi .variants, html.ordi .intro, html.ordi .hint { display: none; }
+  html.ordi .fit { height: 100vh; height: 100dvh; }
+  html.ordi .phone { width: 520px; max-width: 100vw; height: 100vh; height: 100dvh; border: 0; border-radius: 0;
+    box-shadow: 0 0 0 1px rgba(59,36,22,.06), 0 30px 90px -20px rgba(59,36,22,.35); }
+  html.ordi input, html.ordi textarea, html.ordi select { font-size: 16px; }
+  html.ordi * { scrollbar-width: none; } html.ordi *::-webkit-scrollbar { display: none; }   /* pas de barre de défilement blanche */
   .space button, .space a, .space label { touch-action: manipulation; }
 
   /* Carte membre (Mon abonnement) */
@@ -5058,6 +5068,11 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
       var real = window.innerWidth <= 480;
       document.documentElement.classList.toggle('real-phone', real);
       if (real) { ph.style.transform = 'none'; fit.style.height = window.innerHeight + 'px'; return; }
+      /* 31/10/2026 (Marie : « sur l'ordinateur ça s'ouvre en mode téléphone ») : le vrai club, sur ordinateur, n'a plus de cadre
+         de téléphone réduit ; il prend toute la hauteur de l'écran, au milieu, comme une vraie page */
+      var ordi = /[?&]reel=1/.test(location.search) || /dilerna\.fr$/.test(location.hostname);
+      document.documentElement.classList.toggle('ordi', ordi);
+      if (ordi) { ph.style.transform = 'none'; fit.style.height = window.innerHeight + 'px'; return; }
       var avail = window.innerHeight - fit.getBoundingClientRect().top - 28;
       var k = Math.min(1, avail / 832, (window.innerWidth - 32) / 395);
       ph.style.transform = 'scale(' + k + ')';
