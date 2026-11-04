@@ -2753,7 +2753,7 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
   var CLUB_SANS_DEPOSE = CLUB.filter(function (c) { return c[1] !== '1 dépose offerte par an'; });
   var CLUB_MILKY = CLUB_SANS_DEPOSE.filter(function (c) { return c[1] !== 'Parrainage'; });
   var F = [
-    { tab: 'Club Dilerna', crown: true, name: 'Club Dilerna', price: '16,99', places: '1re vague · 5 places uniquement',
+    { tab: 'Club Dilerna', crown: true, name: 'Club Dilerna', price: '16,99', places: '1re vague · plus que 5 places',
       sub: 'Le club dans le club.',
       perks: [
         ['💅','La French et les tout petits nail arts TOUJOURS offerts',' : la French, blanche ou de couleur, à chaque fois que tu en prends une. Et les tout petits nail arts aussi !'],
@@ -2782,7 +2782,10 @@ if (window.innerWidth <= 480 && (/[?&]reel=1/.test(location.search) || /(^|\.)cl
   function vagueTexte(n) {
     var v = 0, pris = 0;
     while (v < VAGUES.length - 1 && n >= pris + VAGUES[v]) { pris += VAGUES[v]; v++; }
-    return (v === 0 ? '1re' : (v + 1) + 'e') + ' vague · ' + VAGUES[v] + ' places uniquement';
+    /* on affiche les places qui RESTENT dans la vague (pas sa taille) : 3 inscrites sur 5 → « plus que 2 places » */
+    var reste = pris + VAGUES[v] - n, nom = (v === 0 ? '1re' : (v + 1) + 'e') + ' vague';
+    if (reste <= 0) return nom + ' · complet';
+    return nom + ' · ' + (reste === 1 ? 'plus qu’1 place' : 'plus que ' + reste + ' places');
   }
   Object.defineProperty(F[0], 'places', { configurable: true, get: function () {
     return vagueTexte(+((/[?&]membres=(\d+)/.exec(location.search) || [])[1] || (function () { try { return localStorage.getItem('dilerna-club-membres'); } catch (e) { return 0; } })() || 0));
